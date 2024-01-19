@@ -1,0 +1,17 @@
+List of Team members:
+Noah Sorenson, Tate Thomas, Thomas Chappel, Ty Didericksen
+
+Proposed Meeting schedule:
+Thursdays at 5pm every week
+Tuesdays at 5pm optional as needed
+
+Schedule of Scrum Masters:
+Milestone 2 Jan 29 - Feb 11 Ty
+Milestone 3 Feb 12 - Feb 25 Thomas
+Milestone 4 Feb - Mar 24 Tate
+Milestone 5 Mar 25 – end Noah
+
+Programming Language: Python
+Source Control: Github
+Project Management: Github Issues
+
