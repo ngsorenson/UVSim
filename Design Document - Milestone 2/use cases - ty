@@ -1,0 +1,80 @@
+User Story 1: As a student, I want to load my BasicML documents into the UVSim and run them 
+so that I can better understand machine language.
+
+Use Case 1: Load document into UVSim
+Actor: Student
+System: UVSim
+Student launches UVSim
+Student selects the option to load a program
+Student provides the path to the BasicML program file
+UVSim reads the file and loads the program into memory
+UVSim displays a confirmation message
+Goal: Load a BasicML program into the UVSim memory
+
+Use Case 2: Perform I/O operations(READ, WRITE)
+Actor: Student
+System: UVSim
+Student loads the program into the UVSim memory which includes READ and WRITE instruction (“READ 12” or “WRITE 15” for example)
+Student initiates the execution of the program
+UVSim encounters the READ instruction thus prompting the student to input a word
+The student inputs a word through the keyboard
+UVSim stores the input word into specified memory location
+UVSim encounters the WRITE instruction thus displaying to the screen the content of the specified memory location from before.
+UVSim continues executing
+Goal: Perform I/O operations using BasicML instructions (READ and WRITE)
+
+Use Case 3: Execute BasicML programs
+Actor: Student
+Preconditions: The student must have already loaded a BasicML program into UVSim. 
+System: UVSim
+Student inputs the command to start program execution.
+UVSim interprets the BasicML instructions one by one.
+UVSim performs the specified operations (e.g., Read, Write, Add, etc).
+UVSim displays the result of each instruction execution.
+UVSim displays a message once the execution is complete
+Goal: Execute the loaded BasicML program, interpreting and performing operations based on the program. 
+
+
+
+
+
+User Story 2: As an educator, I want UVSim to be a good teaching tool for machine language concepts so that I can provide a quality education for my students.
+
+Use Case 1: Teach Control Operation BRANCH
+Actor: Educator
+System: UVSim
+Educator prepares and loads into UVSim a BasicML program that includes the control operation: BRANCH
+Educator initiates program execution 
+UVSim encounters BRANCH instruction 
+UVSim directs the program to the specified location in memory
+UVSim continues execution of other operations/instructions
+UVSim reaches the end of the program and displays completion message
+Goal: Demonstrate the control operations in BasicML for teaching purposes
+
+Use Case 2: Demonstrate Control Operation BRANCHNEG, BRANCHZERO
+Actor: Educator
+System: UVSim
+Educator prepares and loads into UVSim a BasicML program that includes the control operations: BRANCHNEG, BRANCHZERO
+Educator initiates program execution 
+UVSim encounters BRANCHNEG instruction
+UVSim checks if accumulator is negative
+If negative UVSim directs the program to the specified location in memory
+UVSim continues execution of other operations/instructions
+UVSim encounters BRANCHZERO instruction
+UVSim checks if accumulator is = 0
+If zero UVSim directs the program to the specified location in memory
+UVSim continues execution of other operations/instructions
+UVSim reaches the end of the program and displays completion message
+Goal: Demonstrate the control operations BRANCHNEG and BRANCHZERO in BasicML for teaching purposes
+
+
+Use Case 3: Demonstrate Control Operation HALT
+Actor: Educator
+System: UVSim
+Educator prepares and loads into UVSim a BasicML program that includes the control operation: HALT
+Educator initiates program execution 
+UVSim executes the program and it’s instructions
+UVSim encounters HALT instruction
+UVSim halts execution of the program and exits. 
+UVSim displays a completion message.
+Goal: Demonstrate the control operation HALT in BasicML for teaching purposes
