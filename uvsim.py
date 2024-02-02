@@ -31,6 +31,7 @@ class UVSim:
         while True:
 
             self.program_counter += 1
+            self.address = self.program_counter     # updates address of current line of program for memory.LOAD() to access
             self.memory.LOAD()
             self.op_code = int(self.accumulator / 100)  # extracts first 2 digits from accumulator
             self.address = self.accumulator - (self.op_code * 100)  # extracts last 2 digits from accumulator
