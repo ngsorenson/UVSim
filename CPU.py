@@ -1,9 +1,12 @@
 class CPU:
-    def add():
-        pass
-    def subtract():
-        pass
-    def multiply():
-        pass
-    def divide():
-        pass
+    def ADD(self, value, accumulator):
+        return accumulator + value
+
+    def SUBTRACT(self, value, accumulator):
+        return accumulator - value
+
+    def MULTIPLY(self, value, accumulator):
+        return accumulator * value
+
+    def DIVIDE(self, value, accumulator):
+        return accumulator / value
