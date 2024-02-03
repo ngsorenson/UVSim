@@ -1,12 +1,12 @@
 class CPU:
-    def ADD(self, value, accumulator):
-        return accumulator + value
+    def ADD(self, operand, accumulator):
+        return accumulator + operand
 
-    def SUBTRACT(self, value, accumulator):
-        return accumulator - value
+    def SUBTRACT(self, operand, accumulator):
+        return accumulator - operand
 
-    def MULTIPLY(self, value, accumulator):
-        return accumulator * value
+    def MULTIPLY(self, operand, accumulator):
+        return accumulator * operand
 
-    def DIVIDE(self, value, accumulator):
-        return accumulator / value
+    def DIVIDE(self, operand, accumulator):
+        return accumulator / operand
