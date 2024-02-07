@@ -44,3 +44,8 @@ def test_divide_fail():
     cpu = CPU()
     with pytest.raises(TypeError):
         cpu.DIVIDE(5, 5050.3)  # accumulator is not int
+
+def test_divide_by_zero():
+    cpu = CPU()
+    with pytest.raises(ZeroDivisionError):
+        cpu.DIVIDE(0, 1010)
