@@ -22,5 +22,7 @@ class CPU:
     
     def DIVIDE(self, value, accumulator):
         if isinstance(accumulator, int) and isinstance(value, int):
-            return accumulator // value
+            if value != 0:
+                return accumulator // value
+            raise ZeroDivisionError
         raise TypeError("Invalid parameter type(s)")
