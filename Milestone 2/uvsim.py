@@ -12,14 +12,20 @@ class UVSim:
         self.cpu = CPU()
         self.memory = Memory()
 
-    def read_program(self, file_name):
+    def load_program_into_memory(self, file_name):
         """ Writes data from file (specified by file_name) starting at memory address 0. """
 
         with open(file_name, "r") as file:
+
+            # write to memory
             for i, line in enumerate(file):
                 self.accumulator = int(line)
                 self.address = i
                 self.memory.STORE(self.accumulator, self.address)
+
+            # write EOF flag if not already there
+            if abs(self.accumulator) < 10**4:
+                self.memory.STORE(99999, self.address + 1)
 
     def run_program(self):
         """ Runs program starting at memory address 0. """
