@@ -5,22 +5,22 @@ class CPU:
     Parameter validation correct?
     Will this work properly with UVSim class?
     '''
-    def ADD(self, value, accumulator):
+    def ADD(self, accumulator, value):
         if isinstance(accumulator, int) and isinstance(value, int):
             return accumulator + value
         raise TypeError("Invalid parameter type(s)")
 
-    def SUBTRACT(self, value, accumulator):
+    def SUBTRACT(self, accumulator, value):
         if isinstance(accumulator, int) and isinstance(value, int):
             return accumulator - value
         raise TypeError("Invalid parameter type(s)")
     
-    def MULTIPLY(self, value, accumulator):
+    def MULTIPLY(self, accumulator, value):
         if isinstance(accumulator, int) and isinstance(value, int):
             return accumulator * value
         raise TypeError("Invalid parameter type(s)")
     
-    def DIVIDE(self, value, accumulator):
+    def DIVIDE(self, accumulator, value):
         if isinstance(accumulator, int) and isinstance(value, int):
             if value != 0:
                 return accumulator // value
