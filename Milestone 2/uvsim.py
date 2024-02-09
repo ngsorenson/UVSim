@@ -54,8 +54,7 @@ class UVSim:
                 case 11:
                     self.memory.WRITE(self.address)
                 case 20:
-                    result = self.memory.LOAD(self.address)
-                    self.accumulator = self.accumulator if result is None else result
+                    self.accumulator = self.memory.LOAD(self.address)
                 case 21:
                     self.memory.STORE(self.accumulator, self.address)
                 case 30:

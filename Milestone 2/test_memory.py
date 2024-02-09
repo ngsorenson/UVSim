@@ -16,8 +16,10 @@ LOAD
 - positive test
 """
 
-def test_READ_positive():
-    """asserts that when "" is entered, 1337 is added to memory."""
+# TODO: add memory size here. 
+
+def test_read_success():
+    """asserts that when "1337" is entered, 1337 is added to memory."""
     memory = Memory()
     address = 99
     user_input = "1337\n"
@@ -30,7 +32,7 @@ def test_READ_positive():
     assert memory.memory_array[address] == 1337
 
 
-def test_READ_negative():
+def test_read_fail():
     """asserts that when "1337" is entered, 1337 is added to memory."""
     memory = Memory()
     address = 10
@@ -42,21 +44,21 @@ def test_READ_negative():
             memory.READ(address)
 
 
-def test_WRITE_positive():
+def test_write_success():
     pass
 
-def test_WRITE_negative():
+def test_write_fail():
     pass
 
-def test_LOAD_positive():
+def test_load_success():
     pass
 
-def test_LOAD_negative():
+def test_load_fail():
     pass
 
 
-def test_STORE_positive():
+def test_store_success():
     pass
 
-def test_STORE_negative():
+def test_store_fail():
     pass

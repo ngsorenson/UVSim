@@ -1,11 +1,11 @@
 class Memory:
-	def __init__(self, memory_size):
+	def __init__(self, memory_size=99):
 		self.min = 0
 		self.max = memory_size
 		memory_array = []
 
 		for i in range(self.min, self.max + 1):
-			memory_array.append(0)
+			memory_array.append(None)
 
 		self.memory_array = memory_array
 
@@ -16,6 +16,7 @@ class Memory:
 		Args:
 			address (_type_): Address to put thze user input into in memory. 
 		"""
+		# TODO: Make this use STORE but checking the user input. 
 		try: 
 			address_int = int(address)
 			user_input = input(f"Input an integer value to go in memory address {address_int}: ")
@@ -25,11 +26,10 @@ class Memory:
 					self.memory_array[address_int] = input_int
 					break
 				except ValueError:
-					print("Input is not a valid integer.")
+					raise ValueError("Input is not a valid integer.")
 
 		except ValueError:
-			print("Error: Address value is not a valid integer")
-
+			raise ValueError("Error: Address value is not a valid integer")
 
 
 
@@ -39,14 +39,9 @@ class Memory:
 		Args:
 			address (_type_): input string
 		"""
-		try: 
-			address_int = int(address)
-			if address_int not in range(self.min, self.max + 1):
-				print(f"Error: Memory address {address_int} is not valid. It must be between {self.min} and {self.max}.")
-			else:
-				print(f"At memory address {address_int} is {self.memory_array[address_int]}")
-		except ValueError:
-			print("Error: Address value is not a valid integer")
+		# Note: A raised error is automatically propagated up the stack.
+		value = self.LOAD(address=address)
+		print(f"At memory address {address} is {value}")
 
 
 
@@ -57,40 +52,53 @@ class Memory:
 			address (_int_): The memory address in the array
 
 		Returns:
-			_int_: The value at that address
+			_int_: The value at that address or None if there is an error. 
 		"""
 		try:
 			address_int = int(address)
-		# if address is not in the right range return None. 
-			if address not in range (self.min, self.max + 1):
-				print(f"Error: Memory address_int {address_int} is not valid. It must be between {self.min} and {self.max}.")
+			# if address is not in the right range raise an error. 
+			if address_int < self.min or address_int > self.max:
+				raise ValueError(f"Error: Memory address_int {address_int} is not valid. It must be between {self.min} and {self.max} inclusive.")
 			else:
 				value_at_address_int = self.memory_array[address_int]
 				return value_at_address_int
 		except ValueError:
-			print("Error: Address value is not a valid integer")
+			raise ValueError(f"Error: Address value {address} is not a valid integer")
 
 
 
 
-
+	# TODO: Then test with some error checking. 
 	def STORE(self, accumulator, address):
+		"""Stores the accumulator value in the address in memory, if both are valid.
+
+		Args:
+			accumulator (int): 
+			address (int): address in memory
+		"""
+		# See if address is valid. 
 		try:
 			address_int = int(address)
-			if address_int not in range (self.min, self.max + 1):
-				print(f"Error: Memory address_int {address_int} is not valid. It must be between {self.min} and {self.max}.")
-				print("Not added to memory.")
+			# see if address is in range. 
+			if address_int < self.min or address_int > self.max:
+				raise IndexError(
+					f"Memory address {address_int} is not valid. "
+					f"It must be between {self.min} and {self.max} inclusive. "
+					f"Not added to memory"
+				)
 			else:
-				# Error check if accumulator is not an int. 
+				# See if accumulator is valid.  
 				try:
 					acc_int = int(accumulator)
 				except ValueError:
-					print("Error: Accumulator value is not an integer.")
-					print("Not added to memory.")
+					raise ValueError(
+						f"Accumulator value {accumulator} is not an integer."
+						f"Not added to memory."
+					)
 				# take accumulator value and set as value at memory address_int int. 
 				self.memory_array[address_int] = acc_int
 		except ValueError:
-			print("Error: Address value is not a valid integer")
+			raise ValueError(f"Address value {address} is not a valid integer")
 
 
 			
