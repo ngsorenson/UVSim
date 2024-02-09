@@ -25,7 +25,7 @@ class UVSim:
 
             # write to memory, making sure to not go over the memory size. 
             for i, line in enumerate(file):
-                self.accumulator = int(line)
+                # self.accumulator = int(line)
                 self.address = i
                 self.memory.STORE(self.accumulator, self.address)
                 if i == 98:
@@ -33,6 +33,8 @@ class UVSim:
 
             # write EOF flag as a way to end execution w/o a HALT cmd. 
             self.memory.STORE(99999, (MEMORY_SIZE - 1))
+
+        self.accumulator = None  # reset accumulator before execution phase.
 
     def run_program(self):
         """ Runs program starting at memory address 0. """
