@@ -1,3 +1,6 @@
+User Story 1: As a student, I want to load my BasicML documents into the UVSim and run them 
+so that I can better understand machine language.
+
 Use Case 1: Load document into UVSim
 Actor: Student
 System: UVSim
@@ -31,8 +34,52 @@ UVSim displays the result of each instruction execution.
 UVSim displays a message once the execution is complete
 Goal: Execute the loaded BasicML program, interpreting and performing operations based on the program. 
 
+Use case 4: Perform adding.
+	Actor: student learning ML,
+	System: UVSim (CPU),
+	Goal: successfully add two numbers.
 
-Use Case 1: Teach Control Operation BRANCH
+	-Student saves integer into memory.
+	-Student loads a different integer into the accumulator.
+	-Student runs add function, inputting the memory location and the accumulator.
+	-UVSim returns the addition of the two integers.
+
+Use case 5: Perform subtracting.
+	Actor: student learning ML,
+	System: UVSim (CPU),
+	Goal: successfully subtract two numbers.
+
+	-Student saves integer into memory.
+	-Student loads a different integer into the accumulator.
+	-Student runs subtract function, inputting the memory location and the accumulator.
+	-UVSim returns the subtraction of the two integers.
+
+Use case 6: Perform division.
+	Actor: student learning ML,
+	System: UVSim (CPU),
+	Goal: successfully divide two numbers.
+
+	-Student saves integer into memory.
+	-Student loads a different integer into the accumulator.
+	-Student runs divide function, inputting the memory location and the accumulator.
+	-UVSim returns the division of the two integers.
+
+Use case 7: Perform multiplication.
+	Actor: student learning ML,
+	System: UVSim (CPU),
+	Goal: successfully multiply two numbers.
+
+	-Student saves integer into memory.
+	-Student loads a different integer into the accumulator.
+	-Student runs multiply function, inputting the memory location and the accumulator.
+	-UVSim returns the multiplication of the two integers.
+
+
+
+User Story 2: As an educator, I want UVSim to be a good teaching tool for machine language
+concepts so that I can provide a quality education for my students.
+
+Use Case 8: Teach Control Operation BRANCH
 Actor: Educator
 System: UVSim
 Educator prepares and loads into UVSim a BasicML program that includes the control operation: BRANCH
@@ -43,7 +90,7 @@ UVSim continues execution of other operations/instructions
 UVSim reaches the end of the program and displays completion message
 Goal: Demonstrate the control operations in BasicML for teaching purposes
 
-Use Case 2: Demonstrate Control Operation BRANCHNEG, BRANCHZERO
+Use Case 9: Demonstrate Control Operation BRANCHNEG, BRANCHZERO
 Actor: Educator
 System: UVSim
 Educator prepares and loads into UVSim a BasicML program that includes the control operations: BRANCHNEG, BRANCHZERO
@@ -59,8 +106,7 @@ UVSim continues execution of other operations/instructions
 UVSim reaches the end of the program and displays completion message
 Goal: Demonstrate the control operations BRANCHNEG and BRANCHZERO in BasicML for teaching purposes
 
-
-Use Case 3: Demonstrate Control Operation HALT
+Use Case 10: Demonstrate Control Operation HALT
 Actor: Educator
 System: UVSim
 Educator prepares and loads into UVSim a BasicML program that includes the control operation: HALT
@@ -70,3 +116,23 @@ UVSim encounters HALT instruction
 UVSim halts execution of the program and exits. 
 UVSim displays a completion message.
 Goal: Demonstrate the control operation HALT in BasicML for teaching purposes
+
+Use case 11: Perform multiplication with overflow.
+	Actor: professor teaching their students,
+	System: UVSim (CPU),
+	Goal: return an integer that is smaller than expected, error free.
+
+	-Professor saves relatively large integer into memory.
+	-Professor loads a different relatively integer into the accumulator.
+	-Professor runs multiply function, inputting the memory location and the accumulator.
+	-UVSim returns an integer that is smaller than the multiplication of those integers.
+
+Use case 12: Perform division to show integer result when non-integer is expected.
+	Actor: professor teaching their students,
+	System: UVSim (CPU),
+	Goal: return an integer when a non-integer is expected.
+
+	-Professor saves an integer into memory.
+	-Professor loads a different, smaller integer into the accumulator.
+	-Professor runs division function, inputting the memory location and the accumulator.
+	-UVSim returns 0, when a rational number was expected mathematically.
