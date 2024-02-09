@@ -14,7 +14,7 @@ class Memory:
 		"""Reads a word from the keyboard to somewhere in memory. 
 
 		Args:
-			address (_type_): Address to put the user input into in memory. 
+			address (_type_): Address to put thze user input into in memory. 
 		"""
 		try: 
 			address_int = int(address)
