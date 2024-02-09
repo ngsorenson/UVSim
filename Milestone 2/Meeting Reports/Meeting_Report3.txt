@@ -1,0 +1,43 @@
+Meeting Report
+
+
+Meeting Date: [02-01-2024]
+
+
+Meeting Time: [5:30pm] - [6:00pm]
+
+
+Location: [Microsoft Teams]
+
+
+ Attendees
+* Ty Didericksen, Noah Sorenson, Thomas Chappell, Tate Thomas
+
+
+ Agenda Items
+
+
+1. Review User Stories and use cases for the design document.
+2. Created a UML diagram
+3. Discuss Questions about requirements for the prototype
+4. Formulate a plan for dividing up the coding
+
+
+6. Action Items
+
+
+Individual: 
+* Tate: Develop code for the UVSim class
+
+
+* Ty: Develop code for the Processing Class
+
+
+* Thomas: Develop code for the Memory Class 
+
+
+* Noah: Develop code for the CPU Class
+
+
+ Additional Notes: 
+Set a time to meet on Tuesday and Thursday next week to make sure we have the prototype down before submitting. 
