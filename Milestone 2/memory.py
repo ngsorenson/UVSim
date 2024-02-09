@@ -26,7 +26,6 @@ class Memory:
 					break
 				except ValueError:
 					print("Input is not a valid integer.")
-			print(f"Success! {input_int} was added at memory address {address_int}. ")
 
 		except ValueError:
 			print("Error: Address value is not a valid integer")
@@ -67,7 +66,6 @@ class Memory:
 				print(f"Error: Memory address_int {address_int} is not valid. It must be between {self.min} and {self.max}.")
 			else:
 				value_at_address_int = self.memory_array[address_int]
-				print(f"At memory address {address_int} is {value_at_address_int}")
 				return value_at_address_int
 		except ValueError:
 			print("Error: Address value is not a valid integer")
@@ -91,8 +89,6 @@ class Memory:
 					print("Not added to memory.")
 				# take accumulator value and set as value at memory address_int int. 
 				self.memory_array[address_int] = acc_int
-				print("Added to memory!")
-				print(f"At memory address_int {address_int} is {acc_int}")
 		except ValueError:
 			print("Error: Address value is not a valid integer")
 
