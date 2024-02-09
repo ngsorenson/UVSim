@@ -55,7 +55,8 @@ class UVSim:
                 case 11:
                     self.memory.WRITE(self.address)
                 case 20:
-                    self.accumulator = self.memory.LOAD(self.address)
+                    result = self.memory.LOAD(self.address)
+                    self.accumulator = result if result is not None else self.accumulator
                 case 21:
                     self.memory.STORE(self.accumulator, self.address)
                 case 30:
@@ -69,11 +70,9 @@ class UVSim:
                 case 40:    # BRANCH
                     self.program_counter = self.address - 1
                 case 41:    # BRANCHNEG
-                    if self.accumulator < 0:
-                        self.program_counter = self.address - 1
+                    self.program_counter = self.address - 1 if self.accumulator < 0 else self.program_counter
                 case 42:    # BRANCHZERO
-                    if self.accumulator == 0:
-                        self.program_counter = self.address - 1
+                    self.program_counter = self.address - 1 if self.accumulator == 0 else self.program_counter
                 case 43:    # HALT
                     return 0   
                 case _:

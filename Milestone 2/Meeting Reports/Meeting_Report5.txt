@@ -1,0 +1,32 @@
+
+Meeting Report
+
+Meeting Date: [02-08-2024]
+
+Meeting Time: [6:00pm] - [6:50pm]
+
+Location: [Microsoft Teams]
+
+ Attendees
+Noah Sorenson, Thomas Chappell, Tate Thomas
+This meeting was recorded and watched over by Ty Didericksen
+
+ Agenda Items
+Final Touches to existing classes
+Write main.py
+Go over unit testing
+Review progress of Milestone 2
+
+Action Items
+
+Individual: 
+Tate: finishing touches
+
+Ty: Finish README.txt, spreadsheet for unit tests, and test_uvsim.py
+
+Thomas: Implement test_memory.py tests
+
+Noah: finishing touches
+
+ Additional Notes: 
+Milestone 3 up next

@@ -1,0 +1,30 @@
+
+Meeting Report
+
+Meeting Date: [02-06-2024]
+
+Meeting Time: [5:00pm] - [5:50pm]
+
+Location: [Microsoft Teams]
+
+ Attendees
+Ty Didericksen, Noah Sorenson, Thomas Chappell, Tate Thomas
+
+ Agenda Items
+Go over existing code with the group
+Discuss questions regarding issues not outlined in the Milestone
+Discuss overall design ideas for the prototype 
+
+Action Items
+Everyone rewatch Week 4 Video to make sure we didn’t miss anything
+Individual: 
+Tate: Fix and tweak any minor syntax with uvsim class
+
+Ty: Write unit tests for uvsim class and do the spreadsheet. Finish use cases.
+
+Thomas: Finish Memory Class and README.txt
+
+Noah:Tweak unit tests for CPU class
+
+ Additional Notes: 
+Came up with a solution for the missing 43 opcode to halt program
