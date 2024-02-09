@@ -1,7 +1,7 @@
 class Memory:
-	def __init__(self):
+	def __init__(self, memory_size):
 		self.min = 0
-		self.max = 99
+		self.max = memory_size
 		memory_array = []
 
 		for i in range(self.min, self.max + 1):

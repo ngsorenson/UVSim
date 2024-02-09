@@ -1,6 +1,11 @@
 from CPU import CPU
 from memory import Memory
 
+memory_size = 99
+
+def is_EOF(value):
+    return abs(value) >= 10**4
+
 class UVSim:
 
     def __init__(self):
@@ -10,22 +15,24 @@ class UVSim:
         self.address = None              # current address for instruction
         self.program_counter = None      # current address in program
         self.cpu = CPU()
-        self.memory = Memory()
+        self.memory = Memory(memory_size)
+
 
     def load_program_into_memory(self, file_name):
         """ Writes data from file (specified by file_name) starting at memory address 0. """
 
         with open(file_name, "r") as file:
 
-            # write to memory
+            # write to memory, making sure to not go over the memory size. 
             for i, line in enumerate(file):
                 self.accumulator = int(line)
                 self.address = i
                 self.memory.STORE(self.accumulator, self.address)
+                if i == 98:
+                    print("WARNING: Some content from the file could not be loaded into memory.")
 
-            # write EOF flag if not already there
-            if abs(self.accumulator) < 10**4:
-                self.memory.STORE(99999, self.address + 1)
+            # write EOF flag as a way to end execution w/o a HALT cmd. 
+            self.memory.STORE(99999, memory_size - 1)
 
     def run_program(self):
         """ Runs program starting at memory address 0. """
@@ -36,7 +43,7 @@ class UVSim:
 
             self.program_counter += 1
             current_line = self.memory.LOAD(self.program_counter)
-            if abs(current_line) >= 10**4:   # check for end of file value
+            if is_EOF(current_line):   # check for end of file value
                 raise EOFError
             self.op_code = int(current_line / 100)  # extracts first 2 digits from current line
             self.address = current_line - (self.op_code * 100)  # extracts last 2 digits from current line
