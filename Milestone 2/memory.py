@@ -84,21 +84,17 @@ class Memory:
 				raise IndexError(
 					f"Memory address {address_int} is not valid. "
 					f"It must be between {self.min} and {self.max} inclusive. "
-					f"Not added to memory"
+					f"Not added to memory. "
 				)
-			else:
-				# See if accumulator is valid.  
-				try:
-					acc_int = int(accumulator)
-				except ValueError:
-					raise ValueError(
-						f"Accumulator value {accumulator} is not an integer."
-						f"Not added to memory."
-					)
-				# take accumulator value and set as value at memory address_int int. 
-				self.memory_array[address_int] = acc_int
+
+			acc_int = int(accumulator)  # See if accumulator is valid.  
+			self.memory_array[address_int] = acc_int
 		except ValueError:
-			raise ValueError(f"Address value {address} is not a valid integer")
+			raise ValueError(
+				f"Invalid value: {accumulator} or {address}"
+				f"Both accumulator and address must be integers. "
+				f"Not added to memory. "
+			)
 
 
 			

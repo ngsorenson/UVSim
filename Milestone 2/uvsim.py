@@ -25,7 +25,6 @@ class UVSim:
 
             # write to memory, making sure to not go over the memory size. 
             for i, line in enumerate(file):
-                # self.accumulator = int(line)
                 self.address = i
                 self.memory.STORE(self.accumulator, self.address)
                 if i == 98:
