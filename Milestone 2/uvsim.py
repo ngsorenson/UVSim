@@ -1,7 +1,7 @@
 from CPU import CPU
 from memory import Memory
 
-memory_size = 99
+MEMORY_SIZE = 99
 
 def is_EOF(value):
     return abs(value) >= 10**4
@@ -15,7 +15,7 @@ class UVSim:
         self.address = None              # current address for instruction
         self.program_counter = None      # current address in program
         self.cpu = CPU()
-        self.memory = Memory(memory_size)
+        self.memory = Memory(MEMORY_SIZE)
 
 
     def load_program_into_memory(self, file_name):
@@ -32,7 +32,7 @@ class UVSim:
                     print("WARNING: Some content from the file could not be loaded into memory.")
 
             # write EOF flag as a way to end execution w/o a HALT cmd. 
-            self.memory.STORE(99999, memory_size - 1)
+            self.memory.STORE(99999, (MEMORY_SIZE - 1))
 
     def run_program(self):
         """ Runs program starting at memory address 0. """
