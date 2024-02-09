@@ -1,7 +1,7 @@
 from CPU import CPU
 from memory import Memory
 
-MEMORY_SIZE = 99
+MEMORY_SIZE = 100
 
 def is_EOF(value):
     return abs(value) >= 10**4
@@ -25,19 +25,21 @@ class UVSim:
 
             # write to memory, making sure to not go over the memory size. 
             for i, line in enumerate(file):
+                self.accumulator = line
                 self.address = i
                 self.memory.STORE(self.accumulator, self.address)
-                if i == 98:
+                if i == MEMORY_SIZE - 2:
                     print("WARNING: Some content from the file could not be loaded into memory.")
+                    break
 
             # write EOF flag as a way to end execution w/o a HALT cmd. 
             self.memory.STORE(99999, (MEMORY_SIZE - 1))
 
-        self.accumulator = None  # reset accumulator before execution phase.
 
     def run_program(self):
         """ Runs program starting at memory address 0. """
 
+        self.accumulator = None     # reset accumulator before execution phase.
         self.program_counter = -1   # increments by 1 at start of while loop, hence the -1 (to start program at line 0)
 
         while True:

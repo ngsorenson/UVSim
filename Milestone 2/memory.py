@@ -1,13 +1,14 @@
+MEMORY_SIZE = 100
+
 class Memory:
-	def __init__(self, memory_size=99):
+	def __init__(self, memory_size=MEMORY_SIZE):
 		self.min = 0
+
+		if memory_size < 1:
+			memory_size = MEMORY_SIZE
+
 		self.max = memory_size
-		memory_array = []
-
-		for i in range(self.min, self.max + 1):
-			memory_array.append(None)
-
-		self.memory_array = memory_array
+		self.memory_array = [None] * (self.max )
 
 
 	def READ(self, address):
@@ -52,7 +53,7 @@ class Memory:
 			address (_int_): The memory address in the array
 
 		Returns:
-			_int_: The value at that address or None if there is an error. 
+			_int_: The value at that address. 
 		"""
 		try:
 			address_int = int(address)
