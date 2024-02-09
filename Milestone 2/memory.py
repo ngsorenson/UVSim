@@ -58,7 +58,7 @@ class Memory:
 			address_int = int(address)
 			# if address is not in the right range raise an error. 
 			if address_int < self.min or address_int > self.max:
-				raise ValueError(f"Error: Memory address_int {address_int} is not valid. It must be between {self.min} and {self.max} inclusive.")
+				raise IndexError(f"Error: Memory address {address_int} is not valid. It must be between {self.min} and {self.max} inclusive.")
 			else:
 				value_at_address_int = self.memory_array[address_int]
 				return value_at_address_int
@@ -66,9 +66,6 @@ class Memory:
 			raise ValueError(f"Error: Address value {address} is not a valid integer")
 
 
-
-
-	# TODO: Then test with some error checking. 
 	def STORE(self, accumulator, address):
 		"""Stores the accumulator value in the address in memory, if both are valid.
 
@@ -127,15 +124,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-# def main():
-# 	user_input = input("Place input here: ")
-# 	WRITE(user_input)
 
 
 

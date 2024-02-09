@@ -2,21 +2,19 @@ import pytest
 from memory import *
 from unittest.mock import patch
 
-"""
-READ:
-- negative test
-- positive test
 
-WRITE
-- negative test
-- positive test
+def test_memory_init():
+    memory = Memory()
+    for item in memory:
+        assert item == None
+    assert len(memory.memory_array) == 99
+    assert len(memory.memory_array) == 100    
 
-LOAD
-- negative test
-- positive test
-"""
+    memory = Memory(0)
+    assert len(memory.memory_array) == 99
+    assert len(memory.memory_array) == 100
 
-# TODO: add memory size here. 
+
 
 def test_read_success():
     """asserts that when "1337" is entered, 1337 is added to memory."""
@@ -43,6 +41,8 @@ def test_read_fail():
         with patch('builtins.input', side_effect=user_input_gen):
             memory.READ(address)
 
+    # TODO: Should I switch this one to StopIteration or switch the other one to SystemExit??
+
 
 def test_write_success(capfd):
     memory = Memory()
@@ -56,21 +56,22 @@ def test_write_success(capfd):
 
 
 def test_write_fail_index():
-    # TODO: out of bounds. 
     memory = Memory()
     address = 1000
     with pytest.raises(IndexError):
         memory.WRITE(address)
 
+
 def test_write_fail_value():
     memory = Memory()
     address = "muffins"
     with pytest.raises(ValueError):
-        memory.write(address)
+        memory.WRITE(address)
 
 
 def test_store_success():
     memory = Memory()
+    address = 22
 
     # before insertion
     assert memory.memory_array[address] == None
@@ -88,8 +89,8 @@ def test_store_success():
     assert memory.LOAD(address) == value
     assert memory.memory_array[address+1] == None
     assert memory.LOAD(address+1) == None
+    # print(memory.memory_array)
 
-    # TODO: Print the whole array to make sure no funny business happened. 
 
 def test_store_fail_index():
     memory = Memory()
@@ -102,12 +103,40 @@ def test_store_fail_value():
     memory = Memory()
     address = "muffins"
     with pytest.raises(ValueError):
-        memory.write(address)
+        memory.WRITE(address)
 
 
 def test_load_success():
-    pass
+    memory = Memory()
+    # Test 1. 
+    # Test w/o having stored first. 
+    address1 = 99
+    in_array1 = memory.memory_array[address1]
+    from_load1 = memory.LOAD(address1)
+    assert in_array1 == None
+    assert in_array1 == from_load1
 
-def test_load_fail():
-    pass
+    # Test 2. 
+    # Test w/ having stored first.
+    address2 = 44
+    value2 = 10999
+    memory.STORE(value2, address2)
+    in_array2 = memory.memory_array[address2]
+    from_load2 = memory.LOAD(address1)
+    assert value2 == in_array2
+    assert in_array2 == from_load2
+
+
+def test_load_fail_index():
+    memory = Memory()
+    address = 1000
+    with pytest.raises(IndexError):
+        memory.LOAD(address)
+
+
+def test_load_fail_value():
+    memory = Memory()
+    address = "muffins"
+    with pytest.raises(ValueError):
+        memory.LOAD(address)
 
