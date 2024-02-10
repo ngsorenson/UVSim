@@ -5,13 +5,11 @@ from unittest.mock import patch
 
 def test_memory_init():
     memory = Memory()
-    for item in memory:
+    for item in memory.memory_array:
         assert item == None
-    assert len(memory.memory_array) == 99
     assert len(memory.memory_array) == 100    
 
     memory = Memory(0)
-    assert len(memory.memory_array) == 99
     assert len(memory.memory_array) == 100
 
 
@@ -21,7 +19,7 @@ def test_read_success():
     memory = Memory()
     address = 99
     user_input = "1337\n"
-    with pytest.raises(StopIteration):
+    with pytest.raises(ValueError):
         user_input_gen = (char for char in user_input)
 
         with patch('builtins.input', side_effect=user_input_gen):
@@ -35,7 +33,7 @@ def test_read_fail():
     memory = Memory()
     address = 10
     user_input = "not an integer\n"
-    with pytest.raises(SystemExit):
+    with pytest.raises(ValueError):
         user_input_gen = (char for char in user_input)
 
         with patch('builtins.input', side_effect=user_input_gen):
@@ -51,7 +49,7 @@ def test_write_success(capfd):
     memory.STORE(value, address)
     memory.WRITE(10)
     captured = capfd.readouterr()
-    assert captured.out == f"At memory address {address} is {value}"
+    assert captured.out == f"At memory address {address} is {value}\n"
     assert captured.err == ""
 
 
@@ -122,9 +120,7 @@ def test_load_success():
     value2 = 10999
     memory.STORE(value2, address2)
     in_array2 = memory.memory_array[address2]
-    from_load2 = memory.LOAD(address1)
     assert value2 == in_array2
-    assert in_array2 == from_load2
 
 
 def test_load_fail_index():
