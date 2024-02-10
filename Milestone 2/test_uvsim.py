@@ -4,23 +4,23 @@ from memory import Memory
 import sys
 
 
-# Test load_program_into_memory using Test1.txt
-def test_load_program_into_memory_success():
+# Test store_program_in_memory using Test1.txt
+def test_store_program_in_memory_success():
     """
-    Testing load_program_into_memory function
+    Testing store_program_in_memory function
     """
     uvsim = UVSim()
-    uvsim.load_program_into_memory("Test1.txt")
+    uvsim.store_program_in_memory("Test1.txt")
     assert uvsim.memory.LOAD(0) == 1007
 
-    # test load_program_into_memory failure
-def test_load_program_into_memory_failure():
+    # test store_program_in_memory failure
+def test_store_program_in_memory_failure():
     """
-    Testing load_program_into_memory function
+    Testing store_program_in_memory function
     """
     uvsim = UVSim()
     with pytest.raises(FileNotFoundError):
-        uvsim.load_program_into_memory("Failure.txt")
+        uvsim.store_program_in_memory("Failure.txt")
 
 #test run_program success
 def test_run_program_success():
