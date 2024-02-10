@@ -18,7 +18,7 @@ class UVSim:
         self.memory = Memory(MEMORY_SIZE)
 
 
-    def load_program_into_memory(self, file_name):
+    def store_program_in_memory(self, file_name):
         """ Writes data from file (specified by file_name) starting at memory address 0. """
 
         with open(file_name, "r") as file:
