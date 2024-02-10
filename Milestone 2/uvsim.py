@@ -28,12 +28,10 @@ class UVSim:
                 self.accumulator = line
                 self.address = i
                 self.memory.STORE(self.accumulator, self.address)
-                if i == MEMORY_SIZE - 2:
-                    print("WARNING: Some content from the file could not be loaded into memory.")
-                    break
 
-            # write EOF flag as a way to end execution w/o a HALT cmd. 
-            self.memory.STORE(99999, (MEMORY_SIZE - 1))
+            # write EOF flag as a way to end execution w/o a HALT cmd.
+            if is_EOF(self.address) is False:
+                self.memory.STORE(99999, (self.address + 1))
 
 
     def run_program(self):
