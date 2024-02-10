@@ -16,7 +16,7 @@ Use Case | Unit Test Name          | Description                                
 10       | test_load_fail          | Negative test for LOAD instruction (invalid data type) | (To be determined)     | (To be determined)
 11       | test_store_success      | Positive test for STORE instruction (store in memory) | (To be determined)      | (To be determined)
 11       | test_store_fail         | Negative test for STORE instruction (invalid data type) | (To be determined)   | (To be determined)
-1        | test_load_program_into_memory_success | Load program into memory successfully | "Test1.txt"             | (To be determined)
+1        | test_load_program_into_memory_success | Load program into memory successfully | "Test1.txt"             | 1007
 1        | test_load_program_into_memory_failure | Load program into memory failure (file not found) | "Failure.txt"         | FileNotFoundError
-3        | test_run_program_success | Run program successfully                             | (To be determined)        | (To be determined)
-3        | test_run_program_failure | Run program failure (handling EOFError)              | (To be determined)        | EOFError
+3        | test_run_program_success | Run program successfully                             | run_program()        | 4300
+3        | test_run_program_failure | Run program failure (handling EOFError)              | MockMemory()       | EOFError
