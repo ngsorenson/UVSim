@@ -1,7 +1,6 @@
 import pytest
 from uvsim import UVSim
 from memory import Memory
-import sys
 
 
 # Test store_program_in_memory using Test1.txt
