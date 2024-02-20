@@ -2,19 +2,14 @@ import tkinter as tk
 from tkinter import filedialog, Toplevel
 import uvsim
 
-MEMORY_SIZE = 100
-
-def is_EOF(value):
-    return abs(value) >= 10**4
-
 class GUI:
     def __init__(self, root):
         self.uv_sim = uvsim.UVSim("gui")
 
         self.root = root
-        self.root.title("UVSim GUI")
+        self.root.title("UVSim")
 
-        self.title_label = tk.Label(self.root, text="UVSim Program")
+        self.title_label = tk.Label(self.root, text="Log")
         self.title_label.pack()
 
         self.io_frame = tk.Frame(self.root)
