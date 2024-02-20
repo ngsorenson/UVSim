@@ -16,6 +16,7 @@ class Memory:
 
 		Args:
 			address (_type_): Address to put thze user input into in memory. 
+			value (int): optional parameter to be used when calling from GUI
 		"""
 		# TODO: Make this use STORE but checking the user input. 
 		try: 

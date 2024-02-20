@@ -8,6 +8,9 @@ def is_EOF(value):
     return abs(value) >= 10**4
 
 class UVSim:
+    """passing anything into the constructor for gui will change
+    the behavior of some functions to allow them to work with gui, 
+    self.output is temporary storage of things to be displayed to screen"""
 
     def __init__(self, gui = None):
 
