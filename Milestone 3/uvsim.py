@@ -43,7 +43,7 @@ class UVSim:
     def run_program(self):
         """ Runs program starting at memory address 0. """
 
-        self.accumulator = None     # reset accumulator before execution phase.
+        self.accumulator = 0     # reset accumulator before execution phase.
         self.program_counter = -1   # increments by 1 at start of while loop, hence the -1 (to start program at line 0)
 
         while True:
