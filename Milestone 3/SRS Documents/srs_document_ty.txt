@@ -1,0 +1,58 @@
+Functional Requirements:
+Load Program:
+
+The system shall allow the user to load a UVSim program from a file.
+Run Program:
+
+The system shall execute the loaded UVSim program.
+Display Output:
+
+The system shall provide a display to show the output of the UVSim program.
+Handle Instructions:
+
+The system shall interpret and execute instructions from the loaded UVSim program.
+Memory Interaction:
+
+The system shall allow the UVSim program to interact with memory for read and write operations.
+Accumulator Management:
+
+The system shall manage the accumulator during program execution.
+Conditional Branching:
+
+The system shall support conditional branching instructions in the UVSim program.
+Input Handling:
+
+The system shall handle user input, allowing interaction during program execution.
+Halt Execution:
+
+The system shall provide a mechanism to halt the execution of the UVSim program.
+Error Handling:
+
+The system shall handle errors gracefully, providing informative messages to the user.
+Reset Program:
+
+The system shall allow the user to reset the UVSim program to its initial state.
+Single Step Execution:
+
+The system shall support single-step execution for debugging purposes.
+Branch on Negative:
+
+The system shall correctly execute conditional branch instructions based on the accumulator's negative status.
+Branch on Zero:
+
+The system shall correctly execute conditional branch instructions based on the accumulator being zero.
+User-Friendly Interface:
+
+The system shall have an intuitive and user-friendly graphical interface.
+-------------------------------------------------------------------------------------------------------------------
+
+Non-Functional Requirements:
+Performance:
+
+The system shall execute UVSim programs efficiently, with minimal latency.
+Scalability:
+
+The system shall handle UVSim programs of varying complexity and size.
+Cross-Platform Compatibility:
+
+The system shall be compatible with major operating systems, including Windows, macOS, and Linux.
