@@ -21,10 +21,12 @@ Functional:
 20. When opcode 43 is read in program execution, the system shall halt program execution.
 21. When a number greater than 4 digits is read in during program execution, the system shall crash with the error of "EOF Error" displayed in the section of the GUI titled "Log".
 22. When a word with an unrecognized opcode is read during program execution, the system shall crash with the error of "Syntax Error" displayed in the section of the GUI titled "Log".
+23. The GUI shall have a button that allows the user to reinitialize the UVSim emulator to a blank state.
+24. The system shall handle UVSim programs up to 99 words in size.
 
 Non-functional:
 1. The system shall use the English language.
 2. The GUI shall have a responsive design that allows the user to resize the window without losing functionality.
 3. The buttons on the GUI shall have their functions clearly labeled.
-4. The system shall handle UVSim programs of varying complexity and size up to 99 words.
-5. The system shall be compatible with major operating systems, including Windows, macOS, and Linux.
+4. The system shall be compatible with major operating systems, including Windows, macOS, and Linux.
+5. The system shall run on Python 3.x or above
