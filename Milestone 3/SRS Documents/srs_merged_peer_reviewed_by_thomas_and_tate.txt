@@ -1,0 +1,59 @@
+MASTER DOCUMENT - TATE THOMAS AND THOMAS CHAPPELL
+
+1) The system shall allow for a .txt file containing the program to be loaded into memory.
+
+2) The system shall append an EOF flag at the end of all programs.
+
+3) The system shall parse the ADD operation which will perform addition between a value found in the accumulator and a value specified in memory. 
+
+4) The system will parse an SUBTRACTION command which will perform subtraction between a value found in the accumulator and a value specified in memory.
+
+5) The system shall parse the MULTIPLY operation which will perform multiplication between a value found in the accumulator and a value specified in memory.
+
+6) The system shall parse the DIVISION operation which will perform division between a value found in the accumulator and a value specified in memory.
+
+
+The system shall correctly execute conditional branch instructions based on the accumulator being zero.
+
+
+The system shall correctly execute conditional branch instructions based on the accumulator's negative status.
+
+
+The system shall manage the accumulator during program execution.
+
+
+The system shall handle errors gracefully, providing informative messages to the user. 
+
+
+
+The system shall allow the UVSim program to interact with memory for read and write operations.
+
+
+
+The system shall handle errors gracefully, providing informative messages to the user.
+
+
+
+-----
+
+
+
+Non-Functional Requirements:
+
+Performance:
+
+The system shall execute UVSim programs efficiently, with minimal latency.
+
+Scalability:
+
+The system shall handle UVSim programs of varying complexity and size.
+
+Cross-Platform Compatibility:
+
+The system shall be compatible with major operating systems, including Windows, macOS, and Linux.
+
+1) The system shall run on Windows and Mac OS. 
+
+
+
+
