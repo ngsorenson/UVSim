@@ -31,6 +31,12 @@ class GUI:
 
         self.memory_button = tk.Button(self.root, text="Show Memory", command=self.show_memory)
         self.memory_button.pack()
+        
+        self.reinitialize_button = tk.Button(self.root, text="Reinitialize UVSim", command=self.initialize_uvsim)
+        self.reinitialize_button.pack()
+
+    def initialize_uvsim(self):
+        self.uv_sim = uvsim.UVSim("gui")
 
     def load_program(self):
         file_name = filedialog.askopenfilename(title="Select a program file")
@@ -79,6 +85,7 @@ class GUI:
         memory_text.delete(1.0, tk.END)
 
         # Display memory
+        memory_text.insert(tk.END, f"Accumulator: {self.uv_sim.accumulator}\n")
         for address, value in enumerate(self.uv_sim.memory.memory_array):
             memory_text.insert(tk.END, f"{address}: {value}\n")
 
