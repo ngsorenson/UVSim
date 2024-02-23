@@ -1,0 +1,29 @@
+
+Functional requirements:
+1. When opcode 10 is read in program execution, the system shall read a word from user input from the GUI and store it into a location in memory (specified in the instruction).
+2. When opcode 11 is read in program execution, the system shall write a word from a location in memory (specified in the instruction) to the GUI.
+3. When opcode 20 is read in program execution, the system shall load a word from a location in memory (specified in the instruction) into the accumulator.
+4. When opcode 21 is read in program execution, the system shall store the word from the accumulator into a location in memory (specified in the instruction).
+5. When opcode 30 is read in program execution, the system shall add a word from a location in memory (specified in the instruction) to the word in the accumulator, storing the result in the accumulator.
+6. When opcode 31 is read in program execution, the system shall subtract a word from a location in memory (specified in the instruction) from the word in the accumulator, storing the result in the accumulator.
+7. When opcode 32 is read in program execution, the system shall divide the word in the accumulator by a word from a location in memory (specified in the instruction), storing the result in the accumulator.
+8. When opcode 33 is read in program execution, the system shall multiply the word in the accumulator by a word from a location in memory (specified in the instruction), storing the result in the accumulator.
+9. When opcode 40 is read in program execution, the system shall branch program execution to a location in memory (specified in the instruction).
+10. When opcode 41 is read in program execution, the system shall branch program execution to a location in memory (specified in the instruction) if the accumulator is negative.
+11. When opcode 42 is read in program execution, the system shall branch program execution to a location in memory (specified in the instruction) if the accumulator is zero.
+12. When opcode 43 is read in program execution, the system shall halt program execution.
+13. When a 5 digit number is read in program execution, the system shall crash with the error of "EOF Error".
+14. When a word with an unrecognized opcode is read during program execution, the system shall crash with the error of "Syntax Error".
+15. The GUI shall display the program terminal to the user.
+16. The GUI shall feature a button that allows the user to load a program into memory.
+17. The GUI shall feature a button that allows the user to run a program.
+18. The GUI shall feature a button that allows the user to display the system memory in real time.
+19. The GUI shall feature a button that allows the user to "step through" a program, i.e. execute instruction one at a time.
+20. The GUI shall feature a button that allows the user to halt the execution of a program at any moment.
+21. The GUI shall display an arrow at the location in memory where the program execution is currently at.
+22. The GUI shall display what word is currently in the accumulator to the user.
+
+Non-functional requirements:
+1. The system shall load in less than 3 seconds or display a loading screen.
+2. The GUI shall have a responsive design that accommodates for various screen sizes, considering screen widths ranging from 320px to 4096px.
+3. The GUI shall have simple graphics for each button that indicates what the function of that button is.

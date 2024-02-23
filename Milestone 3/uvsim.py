@@ -43,7 +43,7 @@ class UVSim:
     def run_program(self):
         """ Runs program starting at memory address 0. """
 
-        self.accumulator = None     # reset accumulator before execution phase.
+        self.accumulator = 0     # reset accumulator before execution phase.
         self.program_counter = -1   # increments by 1 at start of while loop, hence the -1 (to start program at line 0)
 
         while True:
@@ -59,7 +59,9 @@ class UVSim:
                 case 10:
                     if self.gui:
                         value = tkinter.simpledialog.askinteger("Input value:", "Input 4 digit word to read into memory (prepending a negative is allowed)")
-                    self.memory.READ(self.address, value)
+                        self.memory.READ(self.address, value)
+                    else:
+                        self.memory.READ(self.address)
                 case 11:
                     if self.gui:
                         self.output = self.memory.WRITE(self.address)

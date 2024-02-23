@@ -1,0 +1,22 @@
+Functional:
+1) The system shall allow for a .txt file containing the program to be loaded into memory.
+2) The system shall append an error value at the end of all programs.
+3) The system shall perform addition between a value found in the accumulator and a value specified in memory.
+4) The system shall perform subtraction between a value found in the accumulator and a value specified in memory.
+5) The system shall perform multiplication between a value found in the accumulator and a value specified in memory.
+6) The system shall perform division between a value found in the accumulator and a value specified in memory.
+7) In the event that a mathematical operation results in a number with more than 4 digits, the system will truncate the number 
+to 4 digits before returning it.
+8) The system shall be able to branch to a location in the program if the last operation resulted in a positive number.
+9) The system shall be able to branch to a location in the program if the last operation resulted in a negative number.
+10) The system shall be able to branch to a location in the program if the last operation resulted in zero.
+11) The system shall allow the value in the accumulator to be stored in memory.
+12) The system shall allow values to be loaded from memory into the accumulator.
+13) The system shall allow a user to input a value to be stored in memory.
+14) The system shall allow the value in a memory address to be displayed to the screen.
+15) The system shall raise a syntax error if an unrecognized operation occurs in the program.
+
+Non-functional:
+1) The system shall run on Windows and Mac OS.
+2) The system will be coded in Python.
+3) The system's code will only use the Python standard library.
