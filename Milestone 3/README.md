@@ -14,16 +14,14 @@ UVSim is a simple CPU simulator that emulates a hypothetical machine language. I
 1. Ensure you have Python 3 or later installed on your system.
 2. Run the program by executing the `gui.py` script:
    - `python3 gui.py`
-3. In the GUI window, you will find three buttons:
-   - `Load Program`: Click this button to select a program file and load it into the simulator. The loaded program will be displayed in the "Log" window.
-   - `Run Program`: After loading a program, click this button to run the program. You will be prompted to input a 4-digit word, and the program will execute, displaying the output in the "Log" window.
-   - `Show Memory`: Click this button to open a new window displaying the contents of the memory, showing the words stored in different memory addresses.
-  
-4. Running Another File:
-   - You can load and run another program file without closing the application. Simply click the "Load Program" button again, select a new file, and proceed to run the program.
-  
-5. Clearing Memory:
-   - To completely clear the memory close the UVSim application and run it again.
+3. Operating the GUI:
+   In the GUI window, you will find four buttons:
+   1. `Load Program`: Click this button to select a program file and load it into the simulator. The loaded program will be displayed in the "Log" window.
+   2. `Run Program`: After loading a program, click this button to run the program. You will be prompted to input a 4-digit word, and the program will execute, displaying the output in the "Log" window.
+   3. `Show Memory`: Click this button to open a new window displaying the contents of the memory, showing the words stored in different memory addresses.
+   4. `Reinitialize UVSim`: Click this button to clear the memory and reset the program state without closing the application.
+5. Running multiple files:
+   - To run another file if you would like to clear the memory, click the Reinitialize UVSim then load your new file into UVSim and run it using the `Run Program` button.  
 
 ## Program Structure:
 - `CPU`: Defines basic arithmetic operations.
