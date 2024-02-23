@@ -15,7 +15,7 @@ class UVSim:
     def __init__(self, gui = None):
 
         self.gui = gui
-        self.accumulator = None          # current word
+        self.accumulator = 0             # current word
         self.op_code = None              # current instruction
         self.address = None              # current address for instruction
         self.program_counter = None      # current address in program
@@ -34,6 +34,7 @@ class UVSim:
                 self.accumulator = line
                 self.address = i
                 self.memory.STORE(self.accumulator, self.address)
+            self.accumulator = 0
 
             # write EOF flag as a way to end execution w/o a HALT cmd.
             if is_EOF(self.address) is False:
