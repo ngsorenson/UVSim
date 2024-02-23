@@ -68,6 +68,17 @@ class GUI:
         memory_text.config(yscrollcommand=memory_scrollbar.set)
 
         # Display memory contents in the new window
+        self.update_memory_text(memory_text)
+
+        # Refresh button
+        refresh_button = tk.Button(memory_window, text="Refresh Memory", command=lambda: self.update_memory_text(memory_text))
+        refresh_button.pack()
+
+    def update_memory_text(self, memory_text):
+        # Clear existing text field
+        memory_text.delete(1.0, tk.END)
+
+        # Display memory
         for address, value in enumerate(self.uv_sim.memory.memory_array):
             memory_text.insert(tk.END, f"{address}: {value}\n")
 
