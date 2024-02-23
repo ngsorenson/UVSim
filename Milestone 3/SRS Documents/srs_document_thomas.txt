@@ -1,0 +1,53 @@
+REQUIREMENTS OF OUR SYSTEM - Thomas Chappell
+
+
+FUNCTIONAL: 
+
+1 The user must be able to run the program. 
+
+2 Upon startup, the system must have components/data structures that mimic the OS with an accumulator and memory registers. 
+
+3 The user must be able to select a .txt file from system files to load into memory with labeled buttons, such as "load a file" 
+
+4 After loading the file, the system will show the loaded file in the window. All of the file must be visible and readable. 
+
+5 After loading a file, the user must be able to run the loaded program. 
+
+6 The system must be able to parse the file and identify commands to execute. 
+
+7 The system must be able to prompt the user for a text input when it parses a READ command.
+
+8 The system must be able to store the user input gathered and store it in memory. 
+
+9 When it parses a WRITE command, the system must be able to load the specified value from memory and display it in a way that makes it visible to the user. 
+
+10 When it parses a LOAD command, the system must be able to load that value from memory into the accumulator. 
+
+11 Parsing a STORE command -> puts value into memory. 
+
+12 Parsing an ADD command -> the system grabs a value from memory and adds it to the accumulator and puts that value in the accumulator. 
+
+13 Parsing a SUBTRACT command -> the system does the same thing as #12 but replacing with the SUBTRACT operation. 
+
+14 Parsing a DIVIDE or MULTIPLY command -> the system does the same thing as #12 but replacing with the DIVIDE or MULTIPLY command respectively. 
+
+15 Parse branching operations. 
+
+
+
+-----
+
+
+NON FUNCTIONAL REQUIREMENTS: 
+
+
+1 The system's text is readable. 
+
+2 The system is intuitive, with clearly labeled buttons. 
+
+3 The system allows for multiple files to be loaded in succession. 
+
+
+---------
+
+
