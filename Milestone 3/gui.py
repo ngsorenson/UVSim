@@ -2,8 +2,6 @@ import tkinter as tk
 from tkinter import filedialog, Toplevel
 import uvsim
 
-#todo: allow reinitialization of uvsim
-#todo: show accumulator in memory popup
 class GUI:
     def __init__(self, root):
         self.uv_sim = uvsim.UVSim("gui")
