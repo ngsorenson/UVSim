@@ -59,7 +59,9 @@ class UVSim:
                 case 10:
                     if self.gui:
                         value = tkinter.simpledialog.askinteger("Input value:", "Input 4 digit word to read into memory (prepending a negative is allowed)")
-                    self.memory.READ(self.address, value)
+                        self.memory.READ(self.address, value)
+                    else:
+                        self.memory.READ(self.address)
                 case 11:
                     if self.gui:
                         self.output = self.memory.WRITE(self.address)
