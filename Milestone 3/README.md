@@ -30,7 +30,7 @@ UVSim is a simple CPU simulator that emulates a hypothetical machine language. I
 - `GUI`: The GUI class provides an intuitive user interface to interact with the UVSim. Run the program with the GUI for an enhanced user experience.
 
 ## Program Instructions:
-- Programs are stored in plain text files where each line represents an instruction.
+- Programs are stored in plain text files where each line represents an instruction. In each line, the first two digits represent the opcode, while the last two digits represent the location in memory used in the operation. For example, `1036` performs a READ operation (`10`) and stores the value at index `36` in memory. 
 - The UVSim class recognizes the following opcodes:
   - READ (10)
   - WRITE (11)
