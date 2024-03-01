@@ -1,0 +1,24 @@
+
+Meeting Report
+
+Meeting Date: [02-29-2024]
+
+Meeting Time: [5:30pm] - [6:00pm]
+
+Location: [Microsoft Teams]
+
+Attendees:
+Ty Didericksen, Noah Sorenson, Thomas Chappell, Tate Thomas
+
+Agenda Items:
+Review feedback from Milestone 3
+Discuss Milestone 4
+
+Action Items:
+Noah - Fix output statements
+Tate - Explore stepping function capabilities
+Thomas - Custom tkinter colors
+Ty - Fix user stories
+
+Additional Notes: 
+Everyone understand GUI/tkinter so we don't have to rely on Noah for everything GUI related. Come back next week with ideas on how to do GUI memory editing and file saving.
