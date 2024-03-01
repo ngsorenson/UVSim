@@ -51,6 +51,7 @@ class UVSim:
 
         if self.is_running is False:
             self.accumulator = 0
+            self.outputs = []
             self.program_counter = start_location - 1
             self.is_running = True
 
