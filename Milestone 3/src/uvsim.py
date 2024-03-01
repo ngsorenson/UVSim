@@ -10,7 +10,7 @@ def is_EOF(value):
 class UVSim:
     """passing anything into the constructor for gui will change
     the behavior of some functions to allow them to work with gui, 
-    self.output is temporary storage of things to be displayed to screen"""
+    self.outputs is a list of outputs returned by run_program"""
 
     def __init__(self, gui = None):
 
@@ -21,7 +21,7 @@ class UVSim:
         self.program_counter = None      # current address in program
         self.cpu = CPU()
         self.memory = Memory(MEMORY_SIZE)
-        self.output = None
+        self.outputs = []
 
 
     def store_program_in_memory(self, file_name):
@@ -65,7 +65,7 @@ class UVSim:
                         self.memory.READ(self.address)
                 case 11:
                     if self.gui:
-                        self.output = self.memory.WRITE(self.address)
+                        self.outputs.append(self.memory.WRITE(self.address))
                     else: 
                         print(self.memory.WRITE(self.address))
                 case 20:

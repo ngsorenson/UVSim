@@ -54,8 +54,10 @@ class GUI:
 
     def run_program(self):
         try:
+            self.uv_sim.outputs = [] #clear outputs between each run
             self.uv_sim.run_program()
-            self.io_field.insert(tk.END, "\nOutput: {}\n".format(self.uv_sim.output))
+            for output in self.uv_sim.outputs:
+                self.io_field.insert(tk.END, "\nOutput: {}\n".format(output))
         except EOFError:
             self.io_field.insert(tk.END, "End of program.\n")
         except Exception as e:
