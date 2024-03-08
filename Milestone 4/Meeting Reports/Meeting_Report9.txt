@@ -1,0 +1,23 @@
+
+Meeting Report
+
+Meeting Date: [03-07-2024]
+
+Meeting Time: [5:30pm] - [6:00pm]
+
+Location: [Microsoft Teams]
+
+Attendees:
+Noah Sorenson, Thomas Chappell, Tate Thomas
+
+Agenda Items:
+Discuss Milestone 4 implementation
+
+Action Items:
+Tate - finish and push GUI memory editing, do save button
+Noah - move memory to main window, create log window
+Ty - update use cases and read me
+Thomas - do GUI colors
+
+Additional Notes: 
+Make sure everyone understands tkinter and GUI before next meeting.
