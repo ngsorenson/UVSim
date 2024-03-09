@@ -5,12 +5,12 @@ import tkinter.simpledialog
 MEMORY_SIZE = 100
 
 def is_EOF(value):
-    return abs(value) >= 10**4
+    return abs(int(value)) >= 10**4
 
 class UVSim:
     """passing anything into the constructor for gui will change
     the behavior of some functions to allow them to work with gui, 
-    self.outputs is a list of outputs returned py run_program"""
+    self.output is a list of outputs returned py run_program"""
 
     def __init__(self, gui = None):
 
@@ -18,27 +18,54 @@ class UVSim:
         self.accumulator = 0             # current word
         self.op_code = None              # current instruction
         self.address = None              # current address for instruction
-        self.program_counter = None      # current address in program
+        self.program_counter = 0         # current address in program
         self.is_running = False          # is a program currently running
         self.cpu = CPU()
         self.memory = Memory(MEMORY_SIZE)
-        self.outputs = []
+        self.output = None
 
-    def store_program_in_memory(self, file_name):
+    def store_program_in_memory(self, arg):
         """ Writes data from file (specified by file_name) starting at memory address 0. """
 
-        with open(file_name, "r") as file:
+        self.is_running = False
+
+        if isinstance(arg, str):
+
+            file_name = arg
+
+            with open(file_name, "r") as file:
+
+                # write to memory, making sure to not go over the memory size. 
+                for i, line in enumerate(file):
+                    if (len(line) > 0) and (line != "\n"):
+                        self.accumulator = line
+                        self.address = i
+                        self.memory.STORE(self.accumulator, self.address)
+                    else:
+                        self.address = i
+                        self.memory.DELETE(self.address)
+
+                # write EOF flag as a way to end execution w/o a HALT cmd.
+                if not is_EOF(self.accumulator):
+                    self.memory.STORE(99999, (self.address + 1))
+
+                self.accumulator = 0
+        
+        elif isinstance(arg, list):
 
             # write to memory, making sure to not go over the memory size. 
-            for i, line in enumerate(file):
-                self.accumulator = line
-                self.address = i
-                self.memory.STORE(self.accumulator, self.address)
+            for i, line in enumerate(arg):
+                if len(line) > 0:
+                    self.accumulator = int(line)
+                    self.address = i
+                    # print(self.address, ":", self.accumulator)
+                    self.memory.STORE(self.accumulator, self.address)
+                else:
+                    self.address = i
+                    self.memory.DELETE(self.address)
+
             self.accumulator = 0
 
-            # write EOF flag as a way to end execution w/o a HALT cmd.
-            if is_EOF(self.address) is False:
-                self.memory.STORE(99999, (self.address + 1))
 
     def run_program(self, start_location = 0):
         """ Runs program starting at a given memory address (defaults to 0). """
@@ -49,16 +76,20 @@ class UVSim:
                 
     def step_program(self, start_location = 0):
 
-        if self.is_running is False:
+        if not self.is_running:
             self.accumulator = 0
-            self.outputs = []
+            self.output = None
             self.program_counter = start_location - 1
             self.is_running = True
 
         self.program_counter += 1
         current_line = self.memory.LOAD(self.program_counter)
+        if current_line is None:
+            self.is_running = False
+            raise SyntaxError(f"Line {self.program_counter} does not match any valid instructions.")
         if is_EOF(current_line):   # check for end of file value
-            raise EOFError
+            self.is_running = False
+            raise EOFError("End of file flag reached.")
         self.op_code = int(current_line / 100)  # extracts first 2 digits from current line
         self.address = current_line - (self.op_code * 100)  # extracts last 2 digits from current line
 
@@ -71,7 +102,7 @@ class UVSim:
                     self.memory.READ(self.address)
             case 11:
                 if self.gui:
-                    self.outputs.append(self.memory.WRITE(self.address))
+                    self.output = self.memory.WRITE(self.address)
                 else: 
                     print(self.memory.WRITE(self.address))
             case 20:
@@ -96,4 +127,5 @@ class UVSim:
             case 43:    # HALT
                 self.is_running = False 
             case _:
-                raise SyntaxError("Unrecognized opcode.", f"Opcode {self.op_code} on line {self.program_counter} does not match any valid instructions.")
+                self.is_running = False
+                raise SyntaxError(f"Line {self.program_counter} does not match any valid instructions.")

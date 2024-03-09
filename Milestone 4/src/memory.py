@@ -97,6 +97,26 @@ class Memory:
 				f"Both accumulator and address must be integers. "
 				f"Not added to memory. "
 			)
+		
+	def DELETE(self, address):
+
+		try:
+			address_int = int(address)
+
+			if address_int < self.min or address_int > self.max:
+				raise IndexError(
+					f"Memory address {address_int} is not valid. "
+					f"Address must be an integer. "
+					f"Not deleted from memory. "
+				)
+			
+			self.memory_array[address] = None
+		except ValueError:
+			raise ValueError(
+				f"Invalid value: {address}"
+				f"Address must be an integer. "
+				f"Not deleted from memory. "
+			)
 
 
 			
