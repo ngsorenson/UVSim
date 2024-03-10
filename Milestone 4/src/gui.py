@@ -308,5 +308,6 @@ class GUI:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.minsize(width=800, height=400)
     uv_sim_gui = GUI(root)
     root.mainloop()
