@@ -12,7 +12,7 @@ class GUI:
 
         # Left frame
         self.left_frame = tk.Frame(self.root)
-        self.left_frame.pack(side=tk.LEFT, fill=tk.BOTH, padx=10, pady=5, expand=True)
+        self.left_frame.pack(side=tk.LEFT, fill=tk.BOTH, padx=10, pady=5, expand=False)
         
         # Accumulator frame
         self.accumulator_frame = tk.Frame(self.left_frame)
@@ -44,6 +44,7 @@ class GUI:
 
         self.inner_memory_frame = tk.Frame(self.memory_canvas)
 
+        #Line Numbers
         self.memory_line_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=100, width=3)
         self.memory_line_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_line_text.configure(state="disabled")
@@ -302,9 +303,6 @@ class GUI:
             newline = "\n"
         self.memory_line_text.tag_add("right", 1.0, tk.END)
         self.memory_line_text.config(state="disabled")
-
-        
-
 
 if __name__ == "__main__":
     root = tk.Tk()
