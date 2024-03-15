@@ -27,7 +27,7 @@ class GUI:
 
         # Memory frame
         self.memory_frame = tk.Frame(self.left_frame, pady=5,)
-        self.memory_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.memory_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         self.memory_title_label = tk.Label(self.memory_frame, text="Memory Contents")
         self.memory_title_label.pack()
@@ -49,14 +49,21 @@ class GUI:
         self.memory_line_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_line_text.configure(state="disabled")
 
-        self.memory_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=100)
+        self.memory_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=101) #need to show 101 otherwise 100th line was getting cut off in memory_text
         self.memory_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_text.bind("<Key>", self.is_arrow_break)
         self.memory_text.bind("<KeyRelease>", self.edit_memory)
+        self.memory_text.bind("<Button-3>", self.show_menu) #right-click to show menu
 
         self.memory_canvas.create_window((0, 0), window=self.inner_memory_frame, anchor="nw")
 
         self.update_memory_text()
+
+        # Create a menu for copy, paste, and cut functionality
+        self.memory_canvas_menu = tk.Menu(root, tearoff=0)
+        self.memory_canvas_menu.add_command(label="Copy", command=self.copy_text)
+        self.memory_canvas_menu.add_command(label="Paste", command=self.paste_text)
+        self.memory_canvas_menu.add_command(label="Cut", command=self.cut_text)
 
         # Output frame
         self.output_frame = tk.Frame(self.root)
@@ -65,15 +72,15 @@ class GUI:
         self.output_title_label = tk.Label(self.output_frame, text="Output")
         self.output_title_label.pack()
 
-        self.output_field = tk.Text(self.output_frame, wrap="char", height=10, width=40)
-        self.output_field.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        self.output_field.insert(tk.END, "> ")
-        self.output_field.configure(state="disabled")
+        self.output_text = tk.Text(self.output_frame, wrap="char", height=10, width=40)
+        self.output_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.output_text.insert(tk.END, "> ")
+        self.output_text.configure(state="disabled")
 
-        self.output_scrollbar = tk.Scrollbar(self.output_frame, command=self.output_field.yview)
+        self.output_scrollbar = tk.Scrollbar(self.output_frame, command=self.output_text.yview)
         self.output_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        self.output_field.config(yscrollcommand=self.output_scrollbar.set)
+        self.output_text.config(yscrollcommand=self.output_scrollbar.set)
 
         # Buttons
         self.buttons_frame = tk.Frame(self.root)
@@ -101,10 +108,14 @@ class GUI:
 
         self.step_button = tk.Button(self.execute_buttons, text="Stop Program", command=self.stop_program)
         self.step_button.pack(fill=tk.X)
-
+        
         # Reinitialize button
         self.reinitialize_button = tk.Button(self.root, text="Reinitialize UVSim", command=self.initialize_uvsim)
         self.reinitialize_button.pack(fill=tk.X)
+        
+        #Clear Output button
+        self.clear_output_button = tk.Button(self.root, text="Clear Output", command=self.clear_output)
+        self.clear_output_button.pack(fill=tk.X)
 
     def is_arrow_break(self, event):
         if (event.keycode < 37) or (event.keycode > 40):
@@ -119,20 +130,29 @@ class GUI:
         cursor_pos = self.memory_text.index(tk.INSERT).split(".")
         cursor_pos[0] = int(cursor_pos[0])
         cursor_pos[1] = int(cursor_pos[1])
+        
+        if cursor_pos[0] >= 101: #bugfix for trying to write past end of file 
+            self.memory_text.mark_set("insert", "100.0") #move cursor to line 100
+            return
+
         match event.keycode:
             case 8:     # backspace
-                if cursor_pos[1] > 0:
-                    self.memory_text.delete(f"{cursor_pos[0]}.{cursor_pos[1]-1}", f"{cursor_pos[0]}.{cursor_pos[1]}")
-                    self.memory_title_label.config(text="Memory Contents*")
-                elif self.get_memory_line(cursor_pos[0]-1) == "":
-                    self.memory_text.delete(f"{cursor_pos[0]-1}.0", f"{cursor_pos[0]}.0")
-                    self.memory_title_label.config(text="Memory Contents*")
-                elif self.get_memory_line(cursor_pos[0]) == "":
-                    self.memory_text.delete(f"{cursor_pos[0]}.0", f"{cursor_pos[0]+1}.0")
-                    self.memory_text.mark_set("insert", f"{cursor_pos[0]-1}.{len(self.get_memory_line(cursor_pos[0]-1))}")
+                if self.memory_text.tag_ranges(tk.SEL): #added this to allow user to delete an entire selection instead of just one char at a time
+                    self.memory_text.delete(tk.SEL_FIRST, tk.SEL_LAST)
                     self.memory_title_label.config(text="Memory Contents*")
                 else:
-                    self.memory_text.mark_set("insert", f"{cursor_pos[0]-1}.{len(self.get_memory_line(cursor_pos[0]-1))}")
+                    if cursor_pos[1] > 0:
+                        self.memory_text.delete(f"{cursor_pos[0]}.{cursor_pos[1]-1}", f"{cursor_pos[0]}.{cursor_pos[1]}")
+                        self.memory_title_label.config(text="Memory Contents*")
+                    elif self.get_memory_line(cursor_pos[0]-1) == "":
+                        self.memory_text.delete(f"{cursor_pos[0]-1}.0", f"{cursor_pos[0]}.0")
+                        self.memory_title_label.config(text="Memory Contents*")
+                    elif self.get_memory_line(cursor_pos[0]) == "":
+                        self.memory_text.delete(f"{cursor_pos[0]}.0", f"{cursor_pos[0]+1}.0")
+                        self.memory_text.mark_set("insert", f"{cursor_pos[0]-1}.{len(self.get_memory_line(cursor_pos[0]-1))}")
+                        self.memory_title_label.config(text="Memory Contents*")
+                    else:
+                        self.memory_text.mark_set("insert", f"{cursor_pos[0]-1}.{len(self.get_memory_line(cursor_pos[0]-1))}")
             case 13:    # enter
                 if cursor_pos[0] < self.uv_sim.memory.max:
                     self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "\n")
@@ -168,14 +188,18 @@ class GUI:
                     except ValueError:
                         self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", event.char)
                         self.memory_title_label.config(text="Memory Contents*")
-                else:
-                    self.shortcut(event)
 
     def shortcut(self, event):
-        match event.keycode:
-            case 83:
-                if event.state == 12:
+        if event.state == 12:
+            match event.keycode:
+                case 67: #c
+                    self.copy_text()
+                case 83: #s
                     self.save_gui_memory_text()
+                case 86: #v
+                    self.paste_text()
+                case 88: #x
+                    self.cut_text()
 
     def get_gui_memory_contents(self):
         return self.memory_text.get("1.0", "end-1c").split("\n")[:self.uv_sim.memory.max-1]
@@ -185,18 +209,18 @@ class GUI:
     
     def save_gui_memory_text(self):
         if self.uv_sim.is_running:
-            self.output_field.configure(state="normal")
-            self.output_field.insert(tk.END, "\n> ")
-            self.output_field.configure(state="disabled")
+            self.output_text.configure(state="normal")
+            self.output_text.insert(tk.END, "\n> ")
+            self.output_text.configure(state="disabled")
         self.uv_sim.store_program_in_memory(self.get_gui_memory_contents())
         self.update_memory_text()
         self.memory_title_label.config(text="Memory Contents")
 
     def initialize_uvsim(self):
         if self.uv_sim.is_running:
-            self.output_field.configure(state="normal")
-            self.output_field.insert(tk.END, "\n> ")
-            self.output_field.configure(state="disabled")
+            self.output_text.configure(state="normal")
+            self.output_text.insert(tk.END, "\n> ")
+            self.output_text.configure(state="disabled")
         self.uv_sim = uvsim.UVSim("gui")
         self.update_memory_text()
         self.memory_title_label.config(text="Memory Contents")
@@ -204,16 +228,16 @@ class GUI:
     def load_program(self):
         file_name = filedialog.askopenfilename(title="Select a program file")
         if self.uv_sim.is_running:
-            self.output_field.configure(state="normal")
-            self.output_field.insert(tk.END, "\n> ")
-            self.output_field.configure(state="disabled")
+            self.output_text.configure(state="normal")
+            self.output_text.insert(tk.END, "\n> ")
+            self.output_text.configure(state="disabled")
         self.memory_title_label.config(text="Memory Contents")
         if file_name:
             self.uv_sim.store_program_in_memory(file_name)
             self.update_memory_text()
-            self.output_field.configure(state="normal")
-            self.output_field.insert(tk.END, "File loaded successfully.\n> ")
-            self.output_field.configure(state="disabled")
+            self.output_text.configure(state="normal")
+            self.output_text.insert(tk.END, f"File loaded successfully from {file_name}.\n> ")
+            self.output_text.configure(state="disabled")
     
     def save_program(self):
         self.save_gui_memory_text()
@@ -232,28 +256,28 @@ class GUI:
                 output += "\n"
         file.write(output[:-1])
         file.close()
-        self.output_field.configure(state="normal")
-        self.output_field.insert(tk.END, "File saved successfully.\n> ")
-        self.output_field.configure(state="disabled")
+        self.output_text.configure(state="normal")
+        self.output_text.insert(tk.END, f"File saved successfully to {file}.\n> ")
+        self.output_text.configure(state="disabled")
 
     def step_program(self):
-        self.output_field.configure(state="normal")
+        self.output_text.configure(state="normal")
         try:
             if not self.uv_sim.is_running:
-                self.output_field.insert(tk.END, "Running program:")
+                self.output_text.insert(tk.END, "Running program:")
                 self.save_gui_memory_text()
             self.uv_sim.step_program()
             if self.uv_sim.output is not None:
-                self.output_field.insert(tk.END, f"\n{self.uv_sim.output}")
+                self.output_text.insert(tk.END, f"\n{self.uv_sim.output}")
                 self.uv_sim.output = None
             if not self.uv_sim.is_running:
-                self.output_field.insert(tk.END, "\n> ")
+                self.output_text.insert(tk.END, "\n> ")
         # except EOFError:
-        #     self.output_field.insert(tk.END, "\nEnd of program.\n> ")
+        #     self.output_text.insert(tk.END, "\nEnd of program.\n> ")
         except Exception as e:
-            self.output_field.insert(tk.END, f"\nError: {str(e)}\n> ")
+            self.output_text.insert(tk.END, f"\nError: {str(e)}\n> ")
         self.update_memory_text()
-        self.output_field.configure(state="disabled")
+        self.output_text.configure(state="disabled")
 
     def run_program(self):
         self.step_program()
@@ -262,9 +286,9 @@ class GUI:
     
     def stop_program(self):
         self.uv_sim.is_running = False
-        self.output_field.configure(state="normal")
-        self.output_field.insert(tk.END, "\n> ")
-        self.output_field.configure(state="disabled")
+        self.output_text.configure(state="normal")
+        self.output_text.insert(tk.END, "\n> ")
+        self.output_text.configure(state="disabled")
         self.update_memory_text()
 
     def update_memory_text(self):
@@ -276,18 +300,13 @@ class GUI:
         self.accumulator_text.delete(1.0, tk.END)
         self.accumulator_text.insert(tk.END, self.uv_sim.accumulator)
         self.accumulator_text.config(state="disabled")
-        for address, value in enumerate(self.uv_sim.memory.memory_array):
-            if address == 0:
-                newline = ""
-            else:
-                newline = "\n"
+        for address, value in enumerate(self.uv_sim.memory.memory_array): #i don't remember why i changed this
             if value is not None:
-                self.memory_text.insert(tk.END, f"{newline}{value}")
-            elif address == 99:
-                self.memory_text.insert(tk.END, "")
-            else:
-                self.memory_text.insert(tk.END, "\n")
-        
+                if address == 99:
+                    self.memory_text.insert(tk.END, value)
+                else: 
+                    self.memory_text.insert(tk.END, f"{value}\n") 
+
         self.memory_line_text.config(state="normal")
         self.memory_line_text.delete(1.0, tk.END)
         self.memory_line_text.tag_configure("right", justify="right")
@@ -303,6 +322,57 @@ class GUI:
             newline = "\n"
         self.memory_line_text.tag_add("right", 1.0, tk.END)
         self.memory_line_text.config(state="disabled")
+
+    def clear_output(self):
+        self.output_text.config(state="normal")
+        self.output_text.delete(1.0, tk.END)
+        self.output_text.config(state="disabled")
+    
+    def show_menu(self, event):
+        self.memory_canvas_menu.post(event.x_root, event.y_root)
+    
+    def copy_text(self):
+        try:
+            selected_text = self.memory_text.get(tk.SEL_FIRST, tk.SEL_LAST) #exception would be thrown here if nothing selected
+            self.root.clipboard_clear() #so this line wouldn't execute meaning we don't lose clipboard
+            self.root.clipboard_append(selected_text)
+        except: 
+            pass
+
+    def paste_text(self):
+        pasted_text = self.root.clipboard_get()
+        try:
+            self.memory_text.delete(tk.SEL_FIRST, tk.SEL_LAST)  # Delete selected text if any
+        except:
+            pass
+        
+        #find how many lines we currently have
+        lines= self.memory_text.get("1.0", "end").strip().split("\n")
+        
+        for line in lines: #fixes an issue with not being able to paste a full 100 lines into an empty window 
+            if line == '':
+                lines.remove(line)
+
+        # Count how many lines will be pasted
+        lines_to_paste = pasted_text.split("\n")
+        total_lines = len(lines) + len(lines_to_paste)
+        
+        # Truncate pasted text if it exceeds the limit
+        if total_lines > 100:
+            excess_lines = total_lines - 100
+            lines_to_paste = lines_to_paste[:-excess_lines]
+
+        for line in lines_to_paste:
+            self.memory_text.insert(tk.INSERT, line + "\n")
+
+    def cut_text(self):
+        try:
+            selected_text = self.memory_text.get(tk.SEL_FIRST, tk.SEL_LAST)
+            self.root.clipboard_clear()
+            self.root.clipboard_append(selected_text)
+            self.memory_text.delete(tk.SEL_FIRST, tk.SEL_LAST)
+        except: #do nothing if no selection exists
+            pass
 
 if __name__ == "__main__":
     root = tk.Tk()
