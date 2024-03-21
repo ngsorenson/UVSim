@@ -257,7 +257,7 @@ class GUI:
         file.write(output[:-1])
         file.close()
         self.output_text.configure(state="normal")
-        self.output_text.insert(tk.END, f"File saved successfully to {file}.\n> ")
+        self.output_text.insert(tk.END, f"File saved successfully to {file.name}.\n> ")
         self.output_text.configure(state="disabled")
 
     def step_program(self):
