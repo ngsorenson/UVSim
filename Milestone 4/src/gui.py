@@ -190,7 +190,7 @@ class GUI:
                         self.memory_title_label.config(text="Memory Contents*")
 
     def shortcut(self, event):
-        if event.state == 4:
+        if event.state & 4:
             match event.keycode:
                 case 67: #c
                     self.copy_text()
