@@ -118,7 +118,7 @@ class GUI:
         self.clear_output_button.pack(fill=tk.X)
 
     def is_arrow_break(self, event):
-        if (event.keycode < 37) or (event.keycode > 40):
+        if (event.keysym_num < 37) or (event.keysym_num > 40):
             return "break"
         else:
             return ""
@@ -135,8 +135,8 @@ class GUI:
             self.memory_text.mark_set("insert", "100.0") #move cursor to line 100
             return
 
-        match event.keycode:
-            case 8:     # backspace
+        match event.keysym_num: #checks what keysym was pressed
+            case 65288:     # backspace
                 if self.memory_text.tag_ranges(tk.SEL): #added this to allow user to delete an entire selection instead of just one char at a time
                     self.memory_text.delete(tk.SEL_FIRST, tk.SEL_LAST)
                     self.memory_title_label.config(text="Memory Contents*")
@@ -153,12 +153,12 @@ class GUI:
                         self.memory_title_label.config(text="Memory Contents*")
                     else:
                         self.memory_text.mark_set("insert", f"{cursor_pos[0]-1}.{len(self.get_memory_line(cursor_pos[0]-1))}")
-            case 13:    # enter
+            case 65293:    # return
                 if cursor_pos[0] < self.uv_sim.memory.max:
                     self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "\n")
                     self.memory_title_label.config(text="Memory Contents*")
-            case 187:   # plus
-                if (event.state == 9) and (cursor_pos[1] == 0):
+            case 43:   # plus
+                if (event.state == 1) and (cursor_pos[1] == 0):
                     try:
                         first_char = self.get_memory_line(cursor_pos[0])[0]
                         if (first_char != "+") and (first_char != "-"):
@@ -167,7 +167,7 @@ class GUI:
                     except:
                         self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "+")
                         self.memory_title_label.config(text="Memory Contents*")
-            case 189:   # minus
+            case 45:   # minus
                 if cursor_pos[1] == 0:
                     try:
                         first_char = self.get_memory_line(cursor_pos[0])[0]
@@ -179,7 +179,7 @@ class GUI:
                         self.memory_title_label.config(text="Memory Contents*")
             case _:
                 # integer
-                if (event.keycode >= 48) and (event.keycode <= 57):
+                if (event.keysym_num >= 48) and (event.keysym_num <= 57):
                     try:
                         line_value = int(self.get_memory_line(cursor_pos[0]))
                         if abs(line_value) < 10**4:
@@ -191,14 +191,14 @@ class GUI:
 
     def shortcut(self, event):
         if event.state & 4:
-            match event.keycode:
-                case 67: #c
+            match event.keysym_num:
+                case 99: #c
                     self.copy_text()
-                case 83: #s
+                case 115: #s
                     self.save_gui_memory_text()
-                case 86: #v
+                case 118: #v
                     self.paste_text()
-                case 88: #x
+                case 120: #x
                     self.cut_text()
 
     def get_gui_memory_contents(self):
