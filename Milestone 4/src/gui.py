@@ -13,6 +13,7 @@ OUTPUT_LABEL = "OUTPUT"
 MEMORY_LABEL_UNSAVED_CHANGES = "MEMORY CONTENTS*"
 
 
+
 def is_valid_hex_code(s):
     # Regular expression to match hexadecimal color code
     hex_regex = r'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'
@@ -224,7 +225,8 @@ class GUI:
             popup.destroy()
 
     def open_color_popup(self):
-        # TODO: Make the dialog box look prettier by:
+        # TODO: 
+        # Make the dialog box look prettier by:
         # (1) making it less crowded-looking and 
         # (2) adding a msg at the top that looks like: 
         # '''Enter a hex code value for the color you want to change. Example: #4C721D or 4C721D.
@@ -249,7 +251,7 @@ class GUI:
             command=lambda: self.get_inputs(entry1, entry2, popup)
         )
         submit_button.pack()
-
+g
         cancel_button = tk.Button(
             popup, 
             text="Cancel", 
