@@ -4,7 +4,6 @@ import uvsim
 
 
 PRIMARY_COLOR = '#4C721D'
-# PRIMARY_COLOR = "#542E71"
 SECONDARY_COLOR = '#FFFFFF'
 
 class GUI:
@@ -17,17 +16,25 @@ class GUI:
         self.root.config(background=PRIMARY_COLOR)
 
         # Left frame
-        self.left_frame = tk.Frame(self.root, bg=PRIMARY_COLOR)
+        # self.left_frame = tk.Frame(self.root, bg=PRIMARY_COLOR)
+        self.left_frame = tk.Frame(self.root)
         self.left_frame.pack(side=tk.LEFT, fill=tk.BOTH, padx=10, pady=5, expand=False)
 
         # Accumulator frame
-        self.accumulator_frame = tk.Frame(self.left_frame, bg=PRIMARY_COLOR)
+        # self.accumulator_frame = tk.Frame(self.left_frame, bg=PRIMARY_COLOR)
+        self.accumulator_frame = tk.Frame(self.left_frame)
         self.accumulator_frame.pack(side=tk.TOP, fill=tk.X, pady=5, padx=(0, 16))
 
         self.accumulator_label = tk.Label(self.accumulator_frame, text="Accumulator: ", bg=PRIMARY_COLOR, fg=SECONDARY_COLOR)
         self.accumulator_label.pack(side=tk.LEFT, fill=tk.NONE)
 
-        self.accumulator_text = tk.Text(self.accumulator_frame, wrap="none", padx=5, height=1, width=6, bg=PRIMARY_COLOR, fg=SECONDARY_COLOR)
+        self.accumulator_text = tk.Text(
+            self.accumulator_frame, 
+            wrap="none", 
+            padx=5, 
+            height=1, 
+            width=6, 
+        )
         self.accumulator_text.config(state="disabled")
         self.accumulator_text.pack(side=tk.RIGHT, fill=tk.X, expand=True)
 
@@ -55,7 +62,13 @@ class GUI:
         self.memory_line_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_line_text.configure(state="disabled")
 
-        self.memory_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=101) # need to show 101 otherwise 100th line was getting cut off in memory_text
+        self.memory_text = tk.Text(
+            self.inner_memory_frame, 
+            wrap="none", 
+            padx=5, 
+            height=101
+        ) # need to show 101 otherwise 100th line was getting cut off in memory_text
+        
         self.memory_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_text.bind("<Key>", self.is_arrow_break)
         self.memory_text.bind("<KeyRelease>", self.edit_memory)
@@ -72,10 +85,18 @@ class GUI:
         self.memory_canvas_menu.add_command(label="Cut", command=self.cut_text)
 
         # Output frame
-        self.output_frame = tk.Frame(self.root)
+        self.output_frame = tk.Frame(
+            self.root, 
+            # bg=PRIMARY_COLOR
+        )
         self.output_frame.pack(side=tk.RIGHT, fill=tk.BOTH, padx=10, pady=10, expand=True)
 
-        self.output_title_label = tk.Label(self.output_frame, text="Output")
+        self.output_title_label = tk.Label(
+            self.output_frame, 
+            text="Output", 
+            # bg=PRIMARY_COLOR, 
+            # fg=SECONDARY_COLOR
+        )
         self.output_title_label.pack()
 
         self.output_text = tk.Text(self.output_frame, wrap="char", height=10, width=40)
@@ -89,39 +110,83 @@ class GUI:
         self.output_text.config(yscrollcommand=self.output_scrollbar.set)
 
         # Buttons
-        self.buttons_frame = tk.Frame(self.root)
+        self.buttons_frame = tk.Frame(self.root, bg=PRIMARY_COLOR)
         self.buttons_frame.pack(padx=5, pady=10)
 
         # File buttons
-        self.file_buttons_frame = tk.Frame(self.buttons_frame)
+        self.file_buttons_frame = tk.Frame(self.buttons_frame, bg=PRIMARY_COLOR)
         self.file_buttons_frame.pack(fill=tk.X, pady=(0, 8))
 
-        self.load_button = tk.Button(self.file_buttons_frame, text="Load Program", command=self.load_program, bg=PRIMARY_COLOR)
+        self.load_button = tk.Button(
+            self.file_buttons_frame, 
+            text="Load Program", 
+            command=self.load_program, 
+        )
         self.load_button.pack(fill=tk.X)
 
-        self.save_button = tk.Button(self.file_buttons_frame, text="Save Program", command=self.save_program, bg=PRIMARY_COLOR)
+        self.save_button = tk.Button(self.file_buttons_frame, text="Save Program", command=self.save_program)
         self.save_button.pack(fill=tk.X)
 
         # Program execution buttons
-        self.execute_buttons = tk.Frame(self.buttons_frame)
+        self.execute_buttons = tk.Frame(self.buttons_frame, bg=PRIMARY_COLOR)
         self.execute_buttons.pack(pady=(0, 3))
 
-        self.run_button = tk.Button(self.execute_buttons, text="Run Program", command=self.run_program, bg=PRIMARY_COLOR)
+        self.run_button = tk.Button(self.execute_buttons, text="Run Program", command=self.run_program)
         self.run_button.pack(fill=tk.X)
 
-        self.step_button = tk.Button(self.execute_buttons, text="Step Program", command=self.step_program, bg=PRIMARY_COLOR)
+        self.step_button = tk.Button(self.execute_buttons, text="Step Program", command=self.step_program)
         self.step_button.pack(fill=tk.X)
 
-        self.step_button = tk.Button(self.execute_buttons, text="Stop Program", command=self.stop_program, bg=PRIMARY_COLOR)
+        self.step_button = tk.Button(self.execute_buttons, text="Stop Program", command=self.stop_program)
         self.step_button.pack(fill=tk.X)
         
         # Reinitialize button
-        self.reinitialize_button = tk.Button(self.root, text="Reinitialize UVSim", command=self.initialize_uvsim, bg=PRIMARY_COLOR)
+        self.reinitialize_button = tk.Button(
+            self.root, 
+            text="Reinitialize UVSim", 
+            command=self.initialize_uvsim, 
+        )
         self.reinitialize_button.pack(fill=tk.X)
         
         # Clear Output button
-        self.clear_output_button = tk.Button(self.root, text="Clear Output", command=self.clear_output, bg=PRIMARY_COLOR)
+        self.clear_output_button = tk.Button(
+            self.root, 
+            text="Clear Output", 
+            command=self.clear_output, 
+        )
         self.clear_output_button.pack(fill=tk.X)
+
+        # Change colors button
+        self.change_colors_button = tk.Button(
+            self.root,
+            text="Change Color Scheme",
+            # command=self.change_colors
+        )
+        self.change_colors_button.pack(fill=tk.X)
+
+        self.set_colors(PRIMARY_COLOR, SECONDARY_COLOR)
+
+        # TODO: See if it sets the colors right. 
+
+
+        
+
+    def set_colors(self, color1, color2): 
+        self.root.config(bg=color1)
+        self.left_frame.config(bg=color1)
+        self.accumulator_frame.config(bg=color1)
+
+
+
+
+    def change_colors(self):
+        # TODO: This pops up a box that accepts two color inputs. 
+        # TODO: Checks if they are valid -- if not error. 
+        # TODO: Otherwise, it sets that as PRIMARY_COLOR and SECONDARY_COLOR. 
+        pass
+
+
+
     def is_arrow_break(self, event):
         if (event.keycode < 37) or (event.keycode > 40):
             return "break"
