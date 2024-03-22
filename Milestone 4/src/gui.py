@@ -26,7 +26,7 @@ class GUI:
         self.accumulator_text.pack(side=tk.RIGHT, fill=tk.X, expand=True)
 
         # Memory frame
-        self.memory_frame = tk.Frame(self.left_frame, pady=5,)
+        self.memory_frame = tk.Frame(self.left_frame, pady=5)
         self.memory_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         self.memory_title_label = tk.Label(self.memory_frame, text="Memory Contents")
@@ -45,7 +45,7 @@ class GUI:
         self.inner_memory_frame = tk.Frame(self.memory_canvas)
 
         #Line Numbers
-        self.memory_line_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=100, width=3)
+        self.memory_line_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=102, width=3)
         self.memory_line_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_line_text.configure(state="disabled")
 
@@ -347,7 +347,7 @@ class GUI:
             pass
         
         #find how many lines we currently have
-        lines= self.memory_text.get("1.0", "end").strip().split("\n")
+        lines= self.memory_text.get("1.0", "end").split("\n")
         
         for line in lines: #fixes an issue with not being able to paste a full 100 lines into an empty window 
             if line == '':
