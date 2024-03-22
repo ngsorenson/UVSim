@@ -15,19 +15,21 @@ UVSim is a simple CPU simulator that emulates a hypothetical machine language. I
 2. Run the program by executing the `gui.py` script:
    - `python3 gui.py`
 3. Operating the GUI:
-   In the GUI window, you will find four buttons:
-   1. `Load Program`: Click this button to select a program file and load it into the simulator. The loaded program will be displayed in the "Log" window.
-   2. `Run Program`: After loading a program, click this button to run the program. You will be prompted to input a 4-digit word, and the program will execute, displaying the output in the "Log" window.
-   3. `Show Memory`: Click this button to open a new window displaying the contents of the memory, showing the words stored in different memory addresses.
-   4. `Reinitialize UVSim`: Click this button to clear the memory and reset the program state without closing the application.
+   In the GUI window, you will find 7 buttons:
+      1. `Load Program`: Click this button to select a program file and load it into the simulator. The loaded program will be displayed in the "Log" window.
+      2. `Save Program`: Click this button when you are ready to save the program file to a location you choose.
+      3. `Run Program`: After loading a program, click this button to run the program. You will be prompted to input a 4-digit word, and the program will execute, displaying the output in the "Log" window.
+      4. `Step Program`: This button will step through the program waiting for you to press it again for each step. 
+      5. `Stop Program`: This button will stop the program.
+      6. `Reinitialize UVSim`: Click this button to clear the memory and reset the program state without closing the application.
 5. Running multiple files:
-   - To run another file if you would like to clear the memory, click the Reinitialize UVSim then load your new file into UVSim and run it using the `Run Program` button.  
+   - To run another file if you would like to clear the memory, click the Reinitialize UVSim then load your new file into UVSim and run it using the `Run Program` button.
 
 ## Program Structure:
 - `CPU`: Defines basic arithmetic operations.
 - `Memory`: Manages memory operations such as reading, writing, loading, and storing values.
-- `UVSim`: The main class for running programs. It loads programs into memory and executes the instructions.
-- `GUI`: The GUI class provides an intuitive user interface to interact with the UVSim. Run the program with the GUI for an enhanced user experience.
+- `UVSim`: The main class for running programs. It loads programs into memory and executes the instructions within either by stepping through the program or running through it.
+- `GUI`: The GUI class provides an intuitive user interface to interact with the UVSim in multiple ways.
 
 ## Program Instructions:
 - Programs are stored in plain text files where each line represents an instruction. In each line, the first two digits represent the opcode, while the last two digits represent the location in memory used in the operation. For example, `1036` performs a READ operation (`10`) and stores the value at index `36` in memory. 
