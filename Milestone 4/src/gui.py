@@ -3,13 +3,14 @@ from tkinter import filedialog
 import uvsim
 import re
 
-PRIMARY_COLOR = '#4C721D'    # UVU GREEN 
-SECONDARY_COLOR = '#FFFFFF'  # UVU WHITE
+DEFAULT_PRIMARY_COLOR = '#4C721D'    # UVU GREEN 
+DEFAULT_SECONDARY_COLOR = '#FFFFFF'  # UVU WHITE
 
 # labels
 ACC_LABEL = "ACCUMULATOR: "
 MEMORY_LABEL = "MEMORY CONTENTS"
 OUTPUT_LABEL = "OUTPUT"
+MEMORY_LABEL_UNSAVED_CHANGES = "MEMORY CONTENTS*"
 
 
 def is_valid_hex_code(s):
@@ -194,32 +195,41 @@ class GUI:
         )
         self.change_colors_button.pack(fill=tk.X)
 
-        self.set_colors(PRIMARY_COLOR, SECONDARY_COLOR)
+        self.reset_colors_button = tk.Button(
+            self.root,
+            text="Reset to Default Colors",
+            command=lambda: self.set_colors(
+                DEFAULT_PRIMARY_COLOR, 
+                DEFAULT_SECONDARY_COLOR
+            )
+        )
+        self.reset_colors_button.pack(fill=tk.X)
+
+        # SET COLORS TO THE DEFAULTS UPON STARTUP
+        self.set_colors(DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR)
 
     def get_inputs(self, entry1, entry2, popup):
             input1 = entry1.get()
             input2 = entry2.get()
 
-            print("First input:", input1)
-            print("Type of first input: " + str(type(input1)))
-            print("Second input:", input2)
-            print("Type of second input: " + str(type(input2)))
-
             if not is_valid_hex_code(input1):
                 print(f"Error: Primary color input '{input1}' was not a valid hex code. No primary color change.")
+            else:
+                print(f"Primary color successfully changed to '{input1}'")
             if not is_valid_hex_code(input2):
                 print(f"Error: Secondary color input: '{input2}' was not a valid hex code. No secondary color change.")
-
-
-            # '#533A71'  # a primary color purple
-            # '#80FFE8'  # a secondary color marine
+            else: 
+                print(f"Secondary color was successfully changed to '{input2}'")
             self.set_colors(input1, input2)
             popup.destroy()
 
     def open_color_popup(self):
-        # TODO: Have it give an example message at the top.
-        # TODO: How to format the dialog box better. 
-        
+        # TODO: Make the dialog box look prettier by:
+        # (1) making it less crowded-looking and 
+        # (2) adding a msg at the top that looks like: 
+        # '''Enter a hex code value for the color you want to change. Example: #4C721D or 4C721D.
+        # Leave blank for no change. '''
+
         popup = tk.Toplevel(root)
         popup.title("Input")
 
@@ -279,6 +289,7 @@ class GUI:
             self.clear_output_button,
             self.change_colors_button,
             self.memory_canvas,
+            self.reset_colors_button,
         ]
 
         if is_valid_hex_code(color1):
@@ -289,16 +300,6 @@ class GUI:
             for bt in bt_list:  
                 bt.config(bg=color2)
             
-
-
-
-    def change_colors(self):
-        # TODO: This pops up a box that accepts two color inputs. 
-        # TODO: Checks if they are valid -- if not error. 
-        # TODO: Otherwise, it sets that as PRIMARY_COLOR and SECONDARY_COLOR. 
-        pass
-
-
 
     def is_arrow_break(self, event):
         if (event.keysym_num < 37) or (event.keysym_num > 40):
@@ -322,44 +323,44 @@ class GUI:
             case 65288:     # backspace
                 if self.memory_text.tag_ranges(tk.SEL): #added this to allow user to delete an entire selection instead of just one char at a time
                     self.memory_text.delete(tk.SEL_FIRST, tk.SEL_LAST)
-                    self.memory_title_label.config(text="Memory Contents*")
+                    self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
                 else:
                     if cursor_pos[1] > 0:
                         self.memory_text.delete(f"{cursor_pos[0]}.{cursor_pos[1]-1}", f"{cursor_pos[0]}.{cursor_pos[1]}")
-                        self.memory_title_label.config(text="Memory Contents*")
+                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
                     elif self.get_memory_line(cursor_pos[0]-1) == "":
                         self.memory_text.delete(f"{cursor_pos[0]-1}.0", f"{cursor_pos[0]}.0")
-                        self.memory_title_label.config(text="Memory Contents*")
+                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
                     elif self.get_memory_line(cursor_pos[0]) == "":
                         self.memory_text.delete(f"{cursor_pos[0]}.0", f"{cursor_pos[0]+1}.0")
                         self.memory_text.mark_set("insert", f"{cursor_pos[0]-1}.{len(self.get_memory_line(cursor_pos[0]-1))}")
-                        self.memory_title_label.config(text="Memory Contents*")
+                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
                     else:
                         self.memory_text.mark_set("insert", f"{cursor_pos[0]-1}.{len(self.get_memory_line(cursor_pos[0]-1))}")
             case 65293:    # return
                 if cursor_pos[0] < self.uv_sim.memory.max:
                     self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "\n")
-                    self.memory_title_label.config(text="Memory Contents*")
+                    self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
             case 43:   # plus
                 if (event.state == 1) and (cursor_pos[1] == 0):
                     try:
                         first_char = self.get_memory_line(cursor_pos[0])[0]
                         if (first_char != "+") and (first_char != "-"):
                             self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "+")
-                            self.memory_title_label.config(text="Memory Contents*")
+                            self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
                     except:
                         self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "+")
-                        self.memory_title_label.config(text="Memory Contents*")
+                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
             case 45:   # minus
                 if cursor_pos[1] == 0:
                     try:
                         first_char = self.get_memory_line(cursor_pos[0])[0]
                         if (first_char != "+") and (first_char != "-"):
                             self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "-")
-                            self.memory_title_label.config(text="Memory Contents*")
+                            self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
                     except:
                         self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "-")
-                        self.memory_title_label.config(text="Memory Contents*")
+                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
             case _:
                 # integer
                 if (event.keysym_num >= 48) and (event.keysym_num <= 57):
@@ -367,10 +368,10 @@ class GUI:
                         line_value = int(self.get_memory_line(cursor_pos[0]))
                         if abs(line_value) < 10**4:
                             self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", event.char)
-                            self.memory_title_label.config(text="Memory Contents*")
+                            self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
                     except ValueError:
                         self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", event.char)
-                        self.memory_title_label.config(text="Memory Contents*")
+                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
 
     def shortcut(self, event):
         if event.state & 4:
