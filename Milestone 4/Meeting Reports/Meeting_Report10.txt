@@ -1,0 +1,22 @@
+
+Meeting Report
+
+Meeting Date: [03-21-2024]
+
+Meeting Time: [5:30pm] - [6:00pm]
+
+Location: [Microsoft Teams]
+
+Attendees:
+Noah Sorenson, Thomas Chappell, Tate Thomas, Ty Didericksen
+
+Agenda Items:
+Discuss progress on Milestone 4, determine what we need to do to finish
+
+Action Items:
+Ty - readme, gui wireframe, srs docs, user stories
+Thomas - tkinter colors
+Noah - class diagram
+Tate - look into bugs
+
+Additional Notes: 
