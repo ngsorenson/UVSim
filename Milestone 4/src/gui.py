@@ -297,6 +297,25 @@ class GUI:
             self.reset_colors_button,
         ]
 
+        #manually set the colors of the labels
+        labels = [self.accumulator_label,
+                  self.memory_title_label,
+                  self.output_title_label
+        ]
+
+        for label in labels:
+            label.config(fg='black')
+ 
+        #manually set the colors for the text elements
+        text_elements = [self.accumulator_text,
+                         self.memory_line_text,
+                         self.memory_text,
+                         self.output_text
+        ]
+
+        for text in text_elements:
+            text.config(fg='black')
+
         if is_valid_hex_code(color1):
             for frame in frames:    
                 frame.config(bg=color1)
