@@ -38,8 +38,6 @@ def test_read_fail():
         with patch('builtins.input', side_effect=user_input_gen):
             memory.READ(address)
 
-    # TODO: Should I switch this one to StopIteration or switch the other one to SystemExit??
-
 
 def test_write_success(capfd):
     memory = Memory()

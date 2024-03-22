@@ -13,6 +13,7 @@ OUTPUT_LABEL = "OUTPUT"
 MEMORY_LABEL_UNSAVED_CHANGES = "MEMORY CONTENTS*"
 
 
+
 def is_valid_hex_code(s):
     # Regular expression to match hexadecimal color code
     hex_regex = r'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'

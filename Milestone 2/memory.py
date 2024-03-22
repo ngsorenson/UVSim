@@ -17,7 +17,6 @@ class Memory:
 		Args:
 			address (_type_): Address to put thze user input into in memory. 
 		"""
-		# TODO: Make this use STORE but checking the user input. 
 		try: 
 			address_int = int(address)
 			user_input = input(f"Input an integer value to go in memory address {address_int}: ")
