@@ -1,15 +1,21 @@
 import tkinter as tk
 from tkinter import filedialog
 import uvsim
+import re
 
-
-PRIMARY_COLOR = '#4C721D'
-SECONDARY_COLOR = '#FFFFFF'
+PRIMARY_COLOR = '#4C721D'    # UVU GREEN 
+SECONDARY_COLOR = '#FFFFFF'  # UVU WHITE
 
 # labels
 ACC_LABEL = "ACCUMULATOR: "
 MEMORY_LABEL = "MEMORY CONTENTS"
 OUTPUT_LABEL = "OUTPUT"
+
+
+def is_valid_hex_code(s):
+    # Regular expression to match hexadecimal color code
+    hex_regex = r'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'
+    return bool(re.match(hex_regex, s))
 
 
 class GUI:
@@ -184,15 +190,66 @@ class GUI:
         self.change_colors_button = tk.Button(
             self.root,
             text="Change Color Scheme",
-            # command=self.change_colors
+            command=self.open_color_popup,
         )
         self.change_colors_button.pack(fill=tk.X)
 
         self.set_colors(PRIMARY_COLOR, SECONDARY_COLOR)
 
+    def get_inputs(self, entry1, entry2, popup):
+            input1 = entry1.get()
+            input2 = entry2.get()
+
+            print("First input:", input1)
+            print("Type of first input: " + str(type(input1)))
+            print("Second input:", input2)
+            print("Type of second input: " + str(type(input2)))
+
+            if not is_valid_hex_code(input1):
+                print(f"Error: Primary color input '{input1}' was not a valid hex code. No primary color change.")
+            if not is_valid_hex_code(input2):
+                print(f"Error: Secondary color input: '{input2}' was not a valid hex code. No secondary color change.")
+
+
+            # '#533A71'  # a primary color purple
+            # '#80FFE8'  # a secondary color marine
+            self.set_colors(input1, input2)
+            popup.destroy()
+
+    def open_color_popup(self):
+        # TODO: Have it give an example message at the top.
+        # TODO: How to format the dialog box better. 
+        
+        popup = tk.Toplevel(root)
+        popup.title("Input")
+
+        label1 = tk.Label(popup, text="Enter primary color:")
+        label1.pack()
+        entry1 = tk.Entry(popup)
+        entry1.pack()
+
+        label2 = tk.Label(popup, text="Enter secondary color:")
+        label2.pack()
+        entry2 = tk.Entry(popup)
+        entry2.pack() 
+
+        submit_button = tk.Button(
+            popup, 
+            text="Submit", 
+            command=lambda: self.get_inputs(entry1, entry2, popup)
+        )
+        submit_button.pack()
+
+        cancel_button = tk.Button(
+            popup, 
+            text="Cancel", 
+            command=popup.destroy
+        )
+        cancel_button.pack()
+
 
     def set_colors(self, color1, color2): 
-        # All frames are color1. 
+        # All frames are color1 or what they were before. 
         frames = [
             self.root,
             self.left_frame,
@@ -201,9 +258,7 @@ class GUI:
             self.file_buttons_frame,
             self.execute_buttons, 
         ]
-        for frame in frames:
-            frame.config(bg=color1)
-        # All buttons and text are color2. 
+        # All buttons and text are color2 or what they were before. 
         bt_list = [
             self.accumulator_frame,
             self.memory_frame,
@@ -225,8 +280,14 @@ class GUI:
             self.change_colors_button,
             self.memory_canvas,
         ]
-        for bt in bt_list:
-            bt.config(bg=color2)
+
+        if is_valid_hex_code(color1):
+            for frame in frames:    
+                frame.config(bg=color1)
+
+        if is_valid_hex_code(color2):
+            for bt in bt_list:  
+                bt.config(bg=color2)
             
 
 
