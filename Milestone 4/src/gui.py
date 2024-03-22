@@ -2,6 +2,11 @@ import tkinter as tk
 from tkinter import filedialog
 import uvsim
 
+
+PRIMARY_COLOR = '#4C721D'
+# PRIMARY_COLOR = "#542E71"
+SECONDARY_COLOR = '#FFFFFF'
+
 class GUI:
     def __init__(self, root):
         self.uv_sim = uvsim.UVSim("gui")
@@ -9,30 +14,31 @@ class GUI:
         self.root = root
         self.root.title("UVSim")
         self.root.bind("<KeyRelease>", self.shortcut)
+        self.root.config(background=PRIMARY_COLOR)
 
         # Left frame
-        self.left_frame = tk.Frame(self.root)
+        self.left_frame = tk.Frame(self.root, bg=PRIMARY_COLOR)
         self.left_frame.pack(side=tk.LEFT, fill=tk.BOTH, padx=10, pady=5, expand=False)
-        
+
         # Accumulator frame
-        self.accumulator_frame = tk.Frame(self.left_frame)
+        self.accumulator_frame = tk.Frame(self.left_frame, bg=PRIMARY_COLOR)
         self.accumulator_frame.pack(side=tk.TOP, fill=tk.X, pady=5, padx=(0, 16))
 
-        self.accumulator_label = tk.Label(self.accumulator_frame, text="Accumulator: ")
+        self.accumulator_label = tk.Label(self.accumulator_frame, text="Accumulator: ", bg=PRIMARY_COLOR, fg=SECONDARY_COLOR)
         self.accumulator_label.pack(side=tk.LEFT, fill=tk.NONE)
 
-        self.accumulator_text = tk.Text(self.accumulator_frame, wrap="none", padx=5, height=1, width=6)
+        self.accumulator_text = tk.Text(self.accumulator_frame, wrap="none", padx=5, height=1, width=6, bg=PRIMARY_COLOR, fg=SECONDARY_COLOR)
         self.accumulator_text.config(state="disabled")
         self.accumulator_text.pack(side=tk.RIGHT, fill=tk.X, expand=True)
 
         # Memory frame
-        self.memory_frame = tk.Frame(self.left_frame, pady=5,)
+        self.memory_frame = tk.Frame(self.left_frame, pady=5, bg=PRIMARY_COLOR)
         self.memory_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        self.memory_title_label = tk.Label(self.memory_frame, text="Memory Contents")
+        self.memory_title_label = tk.Label(self.memory_frame, text="Memory Contents", bg=PRIMARY_COLOR, fg=SECONDARY_COLOR)
         self.memory_title_label.pack()
 
-        self.memory_canvas = tk.Canvas(self.memory_frame, width=40)
+        self.memory_canvas = tk.Canvas(self.memory_frame, width=40, bg=PRIMARY_COLOR)
         self.memory_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.memory_scrollbar = tk.Scrollbar(self.memory_frame, orient=tk.VERTICAL, command=self.memory_canvas.yview)
@@ -44,16 +50,16 @@ class GUI:
 
         self.inner_memory_frame = tk.Frame(self.memory_canvas)
 
-        #Line Numbers
+        # Line Numbers
         self.memory_line_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=100, width=3)
         self.memory_line_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_line_text.configure(state="disabled")
 
-        self.memory_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=101) #need to show 101 otherwise 100th line was getting cut off in memory_text
+        self.memory_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=101) # need to show 101 otherwise 100th line was getting cut off in memory_text
         self.memory_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_text.bind("<Key>", self.is_arrow_break)
         self.memory_text.bind("<KeyRelease>", self.edit_memory)
-        self.memory_text.bind("<Button-3>", self.show_menu) #right-click to show menu
+        self.memory_text.bind("<Button-3>", self.show_menu) # right-click to show menu
 
         self.memory_canvas.create_window((0, 0), window=self.inner_memory_frame, anchor="nw")
 
@@ -90,33 +96,32 @@ class GUI:
         self.file_buttons_frame = tk.Frame(self.buttons_frame)
         self.file_buttons_frame.pack(fill=tk.X, pady=(0, 8))
 
-        self.load_button = tk.Button(self.file_buttons_frame, text="Load Program", command=self.load_program)
+        self.load_button = tk.Button(self.file_buttons_frame, text="Load Program", command=self.load_program, bg=PRIMARY_COLOR)
         self.load_button.pack(fill=tk.X)
 
-        self.save_button = tk.Button(self.file_buttons_frame, text="Save Program", command=self.save_program)
+        self.save_button = tk.Button(self.file_buttons_frame, text="Save Program", command=self.save_program, bg=PRIMARY_COLOR)
         self.save_button.pack(fill=tk.X)
 
         # Program execution buttons
         self.execute_buttons = tk.Frame(self.buttons_frame)
         self.execute_buttons.pack(pady=(0, 3))
 
-        self.run_button = tk.Button(self.execute_buttons, text="Run Program", command=self.run_program)
+        self.run_button = tk.Button(self.execute_buttons, text="Run Program", command=self.run_program, bg=PRIMARY_COLOR)
         self.run_button.pack(fill=tk.X)
 
-        self.step_button = tk.Button(self.execute_buttons, text="Step Program", command=self.step_program)
+        self.step_button = tk.Button(self.execute_buttons, text="Step Program", command=self.step_program, bg=PRIMARY_COLOR)
         self.step_button.pack(fill=tk.X)
 
-        self.step_button = tk.Button(self.execute_buttons, text="Stop Program", command=self.stop_program)
+        self.step_button = tk.Button(self.execute_buttons, text="Stop Program", command=self.stop_program, bg=PRIMARY_COLOR)
         self.step_button.pack(fill=tk.X)
         
         # Reinitialize button
-        self.reinitialize_button = tk.Button(self.root, text="Reinitialize UVSim", command=self.initialize_uvsim)
+        self.reinitialize_button = tk.Button(self.root, text="Reinitialize UVSim", command=self.initialize_uvsim, bg=PRIMARY_COLOR)
         self.reinitialize_button.pack(fill=tk.X)
         
-        #Clear Output button
-        self.clear_output_button = tk.Button(self.root, text="Clear Output", command=self.clear_output)
+        # Clear Output button
+        self.clear_output_button = tk.Button(self.root, text="Clear Output", command=self.clear_output, bg=PRIMARY_COLOR)
         self.clear_output_button.pack(fill=tk.X)
-
     def is_arrow_break(self, event):
         if (event.keycode < 37) or (event.keycode > 40):
             return "break"
