@@ -6,6 +6,12 @@ import uvsim
 PRIMARY_COLOR = '#4C721D'
 SECONDARY_COLOR = '#FFFFFF'
 
+# labels
+ACC_LABEL = "ACCUMULATOR: "
+MEMORY_LABEL = "MEMORY CONTENTS"
+OUTPUT_LABEL = "OUTPUT"
+
+
 class GUI:
     def __init__(self, root):
         self.uv_sim = uvsim.UVSim("gui")
@@ -13,19 +19,19 @@ class GUI:
         self.root = root
         self.root.title("UVSim")
         self.root.bind("<KeyRelease>", self.shortcut)
-        self.root.config(background=PRIMARY_COLOR)
 
         # Left frame
-        # self.left_frame = tk.Frame(self.root, bg=PRIMARY_COLOR)
         self.left_frame = tk.Frame(self.root)
         self.left_frame.pack(side=tk.LEFT, fill=tk.BOTH, padx=10, pady=5, expand=False)
 
         # Accumulator frame
-        # self.accumulator_frame = tk.Frame(self.left_frame, bg=PRIMARY_COLOR)
         self.accumulator_frame = tk.Frame(self.left_frame)
         self.accumulator_frame.pack(side=tk.TOP, fill=tk.X, pady=5, padx=(0, 16))
 
-        self.accumulator_label = tk.Label(self.accumulator_frame, text="Accumulator: ", bg=PRIMARY_COLOR, fg=SECONDARY_COLOR)
+        self.accumulator_label = tk.Label(
+            self.accumulator_frame, 
+            text=ACC_LABEL, 
+        )
         self.accumulator_label.pack(side=tk.LEFT, fill=tk.NONE)
 
         self.accumulator_text = tk.Text(
@@ -39,13 +45,22 @@ class GUI:
         self.accumulator_text.pack(side=tk.RIGHT, fill=tk.X, expand=True)
 
         # Memory frame
-        self.memory_frame = tk.Frame(self.left_frame, pady=5, bg=PRIMARY_COLOR)
+        self.memory_frame = tk.Frame(
+            self.left_frame, 
+            pady=5, 
+        )
         self.memory_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        self.memory_title_label = tk.Label(self.memory_frame, text="Memory Contents", bg=PRIMARY_COLOR, fg=SECONDARY_COLOR)
+        self.memory_title_label = tk.Label(
+            self.memory_frame, 
+            text=MEMORY_LABEL, 
+        )
         self.memory_title_label.pack()
 
-        self.memory_canvas = tk.Canvas(self.memory_frame, width=40, bg=PRIMARY_COLOR)
+        self.memory_canvas = tk.Canvas(
+            self.memory_frame, 
+            width=40, 
+        )
         self.memory_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.memory_scrollbar = tk.Scrollbar(self.memory_frame, orient=tk.VERTICAL, command=self.memory_canvas.yview)
@@ -87,15 +102,12 @@ class GUI:
         # Output frame
         self.output_frame = tk.Frame(
             self.root, 
-            # bg=PRIMARY_COLOR
         )
         self.output_frame.pack(side=tk.RIGHT, fill=tk.BOTH, padx=10, pady=10, expand=True)
 
         self.output_title_label = tk.Label(
             self.output_frame, 
-            text="Output", 
-            # bg=PRIMARY_COLOR, 
-            # fg=SECONDARY_COLOR
+            text=OUTPUT_LABEL, 
         )
         self.output_title_label.pack()
 
@@ -110,11 +122,11 @@ class GUI:
         self.output_text.config(yscrollcommand=self.output_scrollbar.set)
 
         # Buttons
-        self.buttons_frame = tk.Frame(self.root, bg=PRIMARY_COLOR)
+        self.buttons_frame = tk.Frame(self.root)
         self.buttons_frame.pack(padx=5, pady=10)
 
         # File buttons
-        self.file_buttons_frame = tk.Frame(self.buttons_frame, bg=PRIMARY_COLOR)
+        self.file_buttons_frame = tk.Frame(self.buttons_frame)
         self.file_buttons_frame.pack(fill=tk.X, pady=(0, 8))
 
         self.load_button = tk.Button(
@@ -128,17 +140,29 @@ class GUI:
         self.save_button.pack(fill=tk.X)
 
         # Program execution buttons
-        self.execute_buttons = tk.Frame(self.buttons_frame, bg=PRIMARY_COLOR)
+        self.execute_buttons = tk.Frame(self.buttons_frame)
         self.execute_buttons.pack(pady=(0, 3))
 
-        self.run_button = tk.Button(self.execute_buttons, text="Run Program", command=self.run_program)
+        self.run_button = tk.Button(
+            self.execute_buttons, 
+            text="Run Program", 
+            command=self.run_program
+        )
         self.run_button.pack(fill=tk.X)
 
-        self.step_button = tk.Button(self.execute_buttons, text="Step Program", command=self.step_program)
+        self.step_button = tk.Button(
+            self.execute_buttons, 
+            text="Step Program", 
+            command=self.step_program
+        )
         self.step_button.pack(fill=tk.X)
 
-        self.step_button = tk.Button(self.execute_buttons, text="Stop Program", command=self.stop_program)
-        self.step_button.pack(fill=tk.X)
+        self.stop_button = tk.Button(
+            self.execute_buttons, 
+            text="Stop Program", 
+            command=self.stop_program
+        )
+        self.stop_button.pack(fill=tk.X)
         
         # Reinitialize button
         self.reinitialize_button = tk.Button(
@@ -166,16 +190,44 @@ class GUI:
 
         self.set_colors(PRIMARY_COLOR, SECONDARY_COLOR)
 
-        # TODO: See if it sets the colors right. 
-
-
-        
 
     def set_colors(self, color1, color2): 
-        self.root.config(bg=color1)
-        self.left_frame.config(bg=color1)
-        self.accumulator_frame.config(bg=color1)
-
+        # All frames are color1. 
+        frames = [
+            self.root,
+            self.left_frame,
+            self.inner_memory_frame,
+            self.buttons_frame,
+            self.file_buttons_frame,
+            self.execute_buttons, 
+        ]
+        for frame in frames:
+            frame.config(bg=color1)
+        # All buttons and text are color2. 
+        bt_list = [
+            self.accumulator_frame,
+            self.memory_frame,
+            self.output_frame,
+            self.accumulator_label,
+            self.accumulator_text, 
+            self.memory_title_label,
+            self.memory_line_text,
+            self.memory_text,
+            self.output_title_label,
+            self.output_text, 
+            self.load_button,
+            self.save_button,
+            self.run_button,
+            self.step_button,
+            self.stop_button,
+            self.reinitialize_button,
+            self.clear_output_button,
+            self.change_colors_button,
+            self.memory_canvas,
+        ]
+        for bt in bt_list:
+            bt.config(bg=color2)
+            
 
 
 
@@ -284,7 +336,7 @@ class GUI:
             self.output_text.configure(state="disabled")
         self.uv_sim.store_program_in_memory(self.get_gui_memory_contents())
         self.update_memory_text()
-        self.memory_title_label.config(text="Memory Contents")
+        self.memory_title_label.config(text=MEMORY_LABEL)
 
     def initialize_uvsim(self):
         if self.uv_sim.is_running:
@@ -293,7 +345,7 @@ class GUI:
             self.output_text.configure(state="disabled")
         self.uv_sim = uvsim.UVSim("gui")
         self.update_memory_text()
-        self.memory_title_label.config(text="Memory Contents")
+        self.memory_title_label.config(text=MEMORY_LABEL)
 
     def load_program(self):
         file_name = filedialog.askopenfilename(title="Select a program file")
@@ -301,7 +353,7 @@ class GUI:
             self.output_text.configure(state="normal")
             self.output_text.insert(tk.END, "\n> ")
             self.output_text.configure(state="disabled")
-        self.memory_title_label.config(text="Memory Contents")
+        self.memory_title_label.config(text=MEMORY_LABEL)
         if file_name:
             self.uv_sim.store_program_in_memory(file_name)
             self.update_memory_text()
