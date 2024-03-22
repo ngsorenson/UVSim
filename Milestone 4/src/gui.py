@@ -251,7 +251,7 @@ class GUI:
             command=lambda: self.get_inputs(entry1, entry2, popup)
         )
         submit_button.pack()
-g
+
         cancel_button = tk.Button(
             popup, 
             text="Cancel", 
