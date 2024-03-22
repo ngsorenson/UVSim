@@ -225,39 +225,42 @@ class GUI:
             popup.destroy()
 
     def open_color_popup(self):
-        # TODO: 
-        # Make the dialog box look prettier by:
-        # (1) making it less crowded-looking and 
-        # (2) adding a msg at the top that looks like: 
-        # '''Enter a hex code value for the color you want to change. Example: #4C721D or 4C721D.
-        # Leave blank for no change. '''
+        # TODO: Make the dialog box look prettier
 
         popup = tk.Toplevel(root)
         popup.title("Input")
+        label0 = tk.Label(popup, text="Enter a hex code value for the color you want to change. Example: #4C721D or 4C721D. Leave blank for no change.")
+        label0.pack(expand=False, fill=tk.BOTH)
 
-        label1 = tk.Label(popup, text="Enter primary color:")
-        label1.pack()
-        entry1 = tk.Entry(popup)
-        entry1.pack()
+        label_frame = tk.Frame(popup)
+        label_frame.pack(pady=10, expand=True)
 
-        label2 = tk.Label(popup, text="Enter secondary color:")
-        label2.pack()
-        entry2 = tk.Entry(popup)
-        entry2.pack() 
+        label1 = tk.Label(label_frame, text="Enter primary color hexcode:")
+        label1.pack(side="left")
+        entry1 = tk.Entry(label_frame)
+        entry1.pack(side="left")
+
+        label2 = tk.Label(label_frame, text="Enter secondary color hexcode:")
+        label2.pack(side="left")
+        entry2 = tk.Entry(label_frame)
+        entry2.pack(side="right") 
+
+        button_frame=tk.Frame(popup)
+        button_frame.pack()
 
         submit_button = tk.Button(
-            popup, 
+            button_frame, 
             text="Submit", 
-            command=lambda: self.get_inputs(entry1, entry2, popup)
+            command=lambda: self.get_inputs(entry1, entry2, popup),
         )
-        submit_button.pack()
+        submit_button.pack(side="left", padx=5, pady=5)
 
         cancel_button = tk.Button(
-            popup, 
+            button_frame, 
             text="Cancel", 
-            command=popup.destroy
+            command=popup.destroy,
         )
-        cancel_button.pack()
+        cancel_button.pack(side="right", padx=5, pady=5)
 
 
     def set_colors(self, color1, color2): 
