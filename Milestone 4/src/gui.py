@@ -15,9 +15,10 @@ MEMORY_LABEL_UNSAVED_CHANGES = "MEMORY CONTENTS*"
 
 
 def is_valid_hex_code(s):
-    # Regular expression to match hexadecimal color code
-    hex_regex = r'^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$'
+    # Regular expression to match hexadecimal color code with '#' symbol required
+    hex_regex = r'^#[a-fA-F0-9]{6}$|^#[a-fA-F0-9]{3}$'
     return bool(re.match(hex_regex, s))
+
 
 
 class GUI:
@@ -40,7 +41,7 @@ class GUI:
             self.accumulator_frame, 
             text=ACC_LABEL, 
         )
-        self.accumulator_label.pack(side=tk.LEFT, fill=tk.NONE)
+        self.accumulator_label.pack(side=tk.LEFT, fill=tk.NONE) 
 
         self.accumulator_text = tk.Text(
             self.accumulator_frame, 
@@ -225,11 +226,12 @@ class GUI:
             popup.destroy()
 
     def open_color_popup(self):
-        # TODO: Make the dialog box look prettier
-
         popup = tk.Toplevel(root)
         popup.title("Input")
-        label0 = tk.Label(popup, text="Enter a hex code value for the color you want to change. Example: #4C721D or 4C721D. Leave blank for no change.")
+        label0 = tk.Label(
+            popup, 
+            text="Enter a hex code value for the color you want to change. Example: #4C721D. Leave blank for no change."
+        )
         label0.pack(expand=False, fill=tk.BOTH)
 
         label_frame = tk.Frame(popup)
