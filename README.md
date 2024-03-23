@@ -16,3 +16,5 @@ UVSim is a simple CPU simulator that emulates a hypothetical machine language.
   - MVP: CLI implementation of the product
 - Milestone3
   - Tkinter GUI implementation of the product 
+- Milestone4
+  - Update of Tkinter GUI with color setting and memory editing functionality
