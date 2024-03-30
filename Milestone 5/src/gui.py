@@ -443,6 +443,7 @@ class GUI:
             self.output_text.configure(state="disabled")
         self.memory_title_label.config(text=MEMORY_LABEL)
         if file_name:
+            self.initialize_uvsim()
             self.uv_sim.store_program_in_memory(file_name)
             self.update_memory_text()
             self.output_text.configure(state="normal")
