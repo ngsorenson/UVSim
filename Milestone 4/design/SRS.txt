@@ -1,0 +1,39 @@
+Functional:
+1. The GUI shall feature a button that allows the user to display a snapshot of the system memory in a popup window.
+2. The GUI shall allow the user to refresh the system memory without closing the memory popup window.
+3. The GUI memory popup shall display what word is currently in the accumulator to the user.
+4. The GUI shall display program output to the user in the section labeled "Log."
+5. The GUI shall feature a button that allows the user to load a program into memory from a .txt file that has one word per line.
+6. The system shall append an EOF flag at the end of all programs.
+7. After loading the file, the system will show the loaded file in the section labeled "Log."
+8. After loading a file, the user must be able to run the loaded program
+9. When opcode 10 is read in program execution, the system shall read a word from user input from the GUI and store it into a location in memory (specified in the instruction).
+10. When opcode 11 is read in program execution, the system shall write a word from a location in memory (specified in the instruction) to the GUI.
+11. When opcode 20 is read in program execution, the system shall load a word from a location in memory (specified in the instruction) into the accumulator.
+12. When opcode 21 is read in program execution, the system shall store the word from the accumulator into a location in memory (specified in the instruction).
+13. When opcode 30 is read in program execution, the system shall add a word from a location in memory (specified in the instruction) to the word in the accumulator, storing the result in the accumulator.
+14. When opcode 31 is read in program execution, the system shall subtract a word from a location in memory (specified in the instruction) from the word in the accumulator, storing the result in the accumulator.
+15. When opcode 32 is read in program execution, the system shall divide the word in the accumulator by a word from a location in memory (specified in the instruction), storing the result in the accumulator.
+16. When opcode 33 is read in program execution, the system shall multiply the word in the accumulator by a word from a location in memory (specified in the instruction), storing the result in the accumulator.
+17. When opcode 40 is read in program execution, the system shall branch program execution to a location in memory (specified in the instruction).
+18. When opcode 41 is read in program execution, the system shall branch program execution to a location in memory (specified in the instruction) if the accumulator is negative.
+19. When opcode 42 is read in program execution, the system shall branch program execution to a location in memory (specified in the instruction) if the accumulator is zero.
+20. When opcode 43 is read in program execution, the system shall halt program execution.
+21. When a number greater than 4 digits is read in during program execution, the system shall crash with the error of "EOF Error" displayed in the section of the GUI titled "Log".
+22. When a word with an unrecognized opcode is read during program execution, the system shall crash with the error of "Syntax Error" displayed in the section of the GUI titled "Log".
+23. The GUI shall have a button that allows the user to reinitialize the UVSim emulator to a blank state.
+24. The system shall handle UVSim programs up to 99 words in size.
+25. The interface should be 'branded' with the appropriate color scheme, with the default being the UVU colors.
+26. The color scheme should be configurable by the user without needing to recompile and reinstall the app.
+27. The system should support loading files from any user-specified folder.
+28. The system should allow users to save edited files through the app to a user-chosen directory, possibly under a different name.
+29. The application should support loading files into the GUI for viewing, inspection, and editing of function commands and their order before execution.
+30. Users should be able to view, add, modify, and delete function codes and data values through the GUI.
+31. Users should be able to cut, copy, and paste for editing, ensuring the max size of the data (100 entries) is not exceeded.
+
+Non-functional:
+1. The system shall use the English language.
+2. The GUI shall have a responsive design that allows the user to resize the window without losing functionality.
+3. The buttons on the GUI shall have their functions clearly labeled.
+4. The system shall be compatible with major operating systems, including Windows, macOS, and Linux.
+5. The system shall run on Python 3.x or above
