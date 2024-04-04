@@ -1,0 +1,26 @@
+Meeting Report
+
+Meeting Date: [04-04-2024]
+
+Meeting Time: [5:00pm] - [6:00pm]
+
+Location: [Microsoft Teams]
+
+Attendees:
+Ty Didericksen, Noah Sorenson, Thomas Chappell, Tate Thomas
+
+Agenda Items:
+Make decision on how we’re implementing 6 digit backwards compatibility
+Assign Milestone 5 items
+Discuss what we’ve got so far for part 3
+
+Action Items:
+Tate is doing part 2
+Noah is working on parts 1 and 3
+Thomas is bugfixing colors that got broken with part 3 implementation
+Ty is helping with general bugfixing and updating our artifacts
+
+
+Additional Notes:
+Add new class to handle input
+We are adding a version attribute to UVSim to support either a “4 bit” or “6 bit” filetype instead of doing a conversion
