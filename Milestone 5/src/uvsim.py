@@ -3,7 +3,7 @@ from memory import Memory
 import tkinter.simpledialog
 
 def is_EOF(value):
-    return abs(int(value)) >= 10**4
+    return abs(int(value)) >= 10**6
 
 class UVSim:
     """passing anything into the constructor for gui will change
@@ -72,7 +72,7 @@ class UVSim:
 
     def run_program(self, start_location = 0):
         """ Runs program starting at a given memory address (defaults to 0). """
-                
+
         self.step_program(start_location)   # note: this line is neccessary to make sure self.is_running is true before starting the while loop (still works as expected when halt is reached on this line)
         while self.is_running:
             self.step_program()
