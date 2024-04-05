@@ -43,7 +43,7 @@ class GUIHandler:
         add_tab_button.pack(side='right')
         tab_management_buttons.pack(anchor='ne', side="top")
 
-        uv_sim = uvsim.UVSim(gui=True)
+        uv_sim = uvsim.UVSim(gui=True) # will create whatever the default version parameter of uvsim is
         GUI(tab, uv_sim)
     
     def close_tab(self, tab):
@@ -112,11 +112,11 @@ class GUI:
         self.inner_memory_frame = tk.Frame(self.memory_canvas)
 
         #Line Numbers
-        self.memory_line_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=252, width=3)
+        self.memory_line_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=self.uv_sim.max_value+2, width=3) #related to comment a few lines below
         self.memory_line_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_line_text.configure(state="disabled")
 
-        self.memory_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=251) # need to show 101 otherwise 100th line was getting cut off in memory_text
+        self.memory_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=self.uv_sim.max_value + 1) # need to show max+1 otherwise max is cut off memory_text
         
         self.memory_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_text.bind("<Key>", self.is_arrow_break)

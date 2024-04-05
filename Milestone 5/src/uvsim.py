@@ -2,7 +2,7 @@ from CPU import CPU
 from memory import Memory
 import tkinter.simpledialog
 
-def is_EOF(value): #this probably won't work anymore since we need two files types, should we just delete it and get rid of the appended error line?
+def is_EOF(value): #this won't work anymore, needs fixing or removing
     return abs(int(value)) >= 10**4
 
 class UVSim:
@@ -20,12 +20,13 @@ class UVSim:
         self.is_running = False          # is a program currently running
         self.output = None
         self.version = version 
+        
         if self.version==1:
-            self.memory = Memory(100)
-            self.cpu=CPU(10**4)
+            self.max_value = 100
         elif self.version==2:
-            self.memory=Memory(250) 
-            self.cpu=CPU(10**6)
+            self.max_value = 250
+        self.memory = Memory(self.max_value)
+        self.cpu = CPU(self.max_value)
 
     def store_program_in_memory(self, arg):
         """ Writes data from file (specified by file_name) starting at memory address 0. """
@@ -72,7 +73,6 @@ class UVSim:
 
     def run_program(self, start_location = 0):
         """ Runs program starting at a given memory address (defaults to 0). """
-
         self.step_program(start_location)   # note: this line is neccessary to make sure self.is_running is true before starting the while loop (still works as expected when halt is reached on this line)
         while self.is_running:
             self.step_program()
