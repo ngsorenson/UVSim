@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import ttk, filedialog
 import uvsim
 import re
 
@@ -12,21 +12,69 @@ MEMORY_LABEL = "MEMORY CONTENTS"
 OUTPUT_LABEL = "OUTPUT"
 MEMORY_LABEL_UNSAVED_CHANGES = "MEMORY CONTENTS*"
 
-
-
 def is_valid_hex_code(s):
     # Regular expression to match hexadecimal color code with '#' symbol required
     hex_regex = r'^#[a-fA-F0-9]{6}$|^#[a-fA-F0-9]{3}$'
     return bool(re.match(hex_regex, s))
 
-
-
-class GUI:
+class GUIHandler:
     def __init__(self, root):
-        self.uv_sim = uvsim.UVSim("gui")
-
+        self.tab_number = 1
         self.root = root
         self.root.title("UVSim")
+
+        self.notebook = ttk.Notebook(self.root)
+        self.notebook.pack(fill=tk.BOTH, expand=True)
+
+        self.create_tab()
+        self.set_guihandler_colors(DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR)
+
+    def create_tab(self):
+        tab = ttk.Frame(self.notebook)
+        self.notebook.add(tab, text=f"Tab {self.tab_number}")
+        self.tab_number += 1
+        
+        tab_management_buttons = ttk.Frame(tab)
+        close_button = ttk.Button(tab_management_buttons, text="X", command=lambda: self.close_tab(tab)) #close current tab
+        edit_button = ttk.Button(tab_management_buttons, text="Change Tab Name", command=lambda: self.change_tab_name(tab)) #edit current tab name
+        add_tab_button = ttk.Button(tab_management_buttons, text="+", command=self.create_tab) #add new tab
+        edit_button.pack(side='left')
+        close_button.pack(side='right')
+        add_tab_button.pack(side='right')
+        tab_management_buttons.pack(anchor='ne', side="top")
+
+        uv_sim = uvsim.UVSim(gui=True)
+        GUI(tab, uv_sim)
+    
+    def close_tab(self, tab):
+        total_tabs = self.notebook.index('end')
+        if total_tabs == 1: #tab is last tab, prompt before quitting program
+            if tk.messagebox.askyesno("Exit Confirmation", "Are you sure you want to exit?"):
+                self.root.quit()
+        else:
+            self.notebook.forget(tab)
+
+    def change_tab_name(self, tab):
+        current_text = self.notebook.tab(tab, "text")
+        new_name = tk.simpledialog.askstring("Edit Tab Name", f"Enter new name for this tab", initialvalue=current_text)
+        if new_name:
+            self.notebook.tab(tab, text=new_name)
+
+    def set_guihandler_colors(self, color1, color2):
+        style = ttk.Style()
+        style.theme_use('default')
+        if is_valid_hex_code(color1):
+            style.configure('TNotebook', background=color1)
+            style.map('TNotebook.Tab', background = [('selected', color1)])
+            style.configure('TFrame', background=color1)
+        if is_valid_hex_code(color2):
+            style.configure('TButton', background=color2)
+        return style
+
+class GUI:
+    def __init__(self, tab, uv_sim):
+        self.uv_sim = uv_sim
+        self.root = tab #self.root is now referencing the tab parent in the ttk notebook from GUIHandler
         self.root.bind("<KeyRelease>", self.shortcut)
 
         # Left frame
@@ -37,39 +85,21 @@ class GUI:
         self.accumulator_frame = tk.Frame(self.left_frame)
         self.accumulator_frame.pack(side=tk.TOP, fill=tk.X, pady=5, padx=(0, 16))
 
-        self.accumulator_label = tk.Label(
-            self.accumulator_frame, 
-            text=ACC_LABEL, 
-        )
+        self.accumulator_label = tk.Label(self.accumulator_frame,  text=ACC_LABEL)
         self.accumulator_label.pack(side=tk.LEFT, fill=tk.NONE) 
 
-        self.accumulator_text = tk.Text(
-            self.accumulator_frame, 
-            wrap="none", 
-            padx=5, 
-            height=1, 
-            width=6, 
-        )
+        self.accumulator_text = tk.Text(self.accumulator_frame, wrap="none", padx=5, height=1, width=8)
         self.accumulator_text.config(state="disabled")
         self.accumulator_text.pack(side=tk.RIGHT, fill=tk.X, expand=True)
 
         # Memory frame
-        self.memory_frame = tk.Frame(
-            self.left_frame, 
-            pady=5, 
-        )
+        self.memory_frame = tk.Frame(self.left_frame, pady=5)
         self.memory_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        self.memory_title_label = tk.Label(
-            self.memory_frame, 
-            text=MEMORY_LABEL, 
-        )
+        self.memory_title_label = tk.Label(self.memory_frame, text=MEMORY_LABEL)
         self.memory_title_label.pack()
 
-        self.memory_canvas = tk.Canvas(
-            self.memory_frame, 
-            width=40, 
-        )
+        self.memory_canvas = tk.Canvas(self.memory_frame, width=40)
         self.memory_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.memory_scrollbar = tk.Scrollbar(self.memory_frame, orient=tk.VERTICAL, command=self.memory_canvas.yview)
@@ -82,16 +112,11 @@ class GUI:
         self.inner_memory_frame = tk.Frame(self.memory_canvas)
 
         #Line Numbers
-        self.memory_line_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=102, width=3)
+        self.memory_line_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=252, width=3)
         self.memory_line_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_line_text.configure(state="disabled")
 
-        self.memory_text = tk.Text(
-            self.inner_memory_frame, 
-            wrap="none", 
-            padx=5, 
-            height=101
-        ) # need to show 101 otherwise 100th line was getting cut off in memory_text
+        self.memory_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=251) # need to show 101 otherwise 100th line was getting cut off in memory_text
         
         self.memory_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_text.bind("<Key>", self.is_arrow_break)
@@ -109,15 +134,10 @@ class GUI:
         self.memory_canvas_menu.add_command(label="Cut", command=self.cut_text)
 
         # Output frame
-        self.output_frame = tk.Frame(
-            self.root, 
-        )
-        self.output_frame.pack(side=tk.RIGHT, fill=tk.BOTH, padx=10, pady=10, expand=True)
+        self.output_frame = tk.Frame(self.root)
+        self.output_frame.pack(side=tk.RIGHT, fill=tk.BOTH, padx=10, pady=5, expand=True)
 
-        self.output_title_label = tk.Label(
-            self.output_frame, 
-            text=OUTPUT_LABEL, 
-        )
+        self.output_title_label = tk.Label(self.output_frame, text=OUTPUT_LABEL)
         self.output_title_label.pack()
 
         self.output_text = tk.Text(self.output_frame, wrap="char", height=10, width=40)
@@ -130,86 +150,47 @@ class GUI:
 
         self.output_text.config(yscrollcommand=self.output_scrollbar.set)
 
-        # Buttons
-        self.buttons_frame = tk.Frame(self.root)
-        self.buttons_frame.pack(padx=5, pady=10)
-
         # File buttons
-        self.file_buttons_frame = tk.Frame(self.buttons_frame)
-        self.file_buttons_frame.pack(fill=tk.X, pady=(0, 8))
+        self.file_buttons_frame = tk.Frame(self.root)
+        self.file_buttons_frame.pack(fill=tk.X, pady=5)
 
-        self.load_button = tk.Button(
-            self.file_buttons_frame, 
-            text="Load Program", 
-            command=self.load_program, 
-        )
+        self.load_button = tk.Button(self.file_buttons_frame, text="Load Program", command=self.load_program)
         self.load_button.pack(fill=tk.X)
 
         self.save_button = tk.Button(self.file_buttons_frame, text="Save Program", command=self.save_program)
         self.save_button.pack(fill=tk.X)
 
         # Program execution buttons
-        self.execute_buttons = tk.Frame(self.buttons_frame)
-        self.execute_buttons.pack(pady=(0, 3))
+        self.execute_buttons = tk.Frame(self.root)
+        self.execute_buttons.pack(fill=tk.X, pady=(0,5))
 
-        self.run_button = tk.Button(
-            self.execute_buttons, 
-            text="Run Program", 
-            command=self.run_program
-        )
+        self.run_button = tk.Button(self.execute_buttons, text="Run Program", command=self.run_program)
         self.run_button.pack(fill=tk.X)
 
-        self.step_button = tk.Button(
-            self.execute_buttons, 
-            text="Step Program", 
-            command=self.step_program
-        )
+        self.step_button = tk.Button(self.execute_buttons, text="Step Program", command=self.step_program)
         self.step_button.pack(fill=tk.X)
 
-        self.stop_button = tk.Button(
-            self.execute_buttons, 
-            text="Stop Program", 
-            command=self.stop_program
-        )
+        self.stop_button = tk.Button(self.execute_buttons, text="Stop Program", command=self.stop_program)
         self.stop_button.pack(fill=tk.X)
         
         # Reinitialize button
-        self.reinitialize_button = tk.Button(
-            self.root, 
-            text="Reinitialize UVSim", 
-            command=self.initialize_uvsim, 
-        )
+        self.reinitialize_button = tk.Button(self.root, text="Reinitialize UVSim", command=self.initialize_uvsim)
         self.reinitialize_button.pack(fill=tk.X)
         
         # Clear Output button
-        self.clear_output_button = tk.Button(
-            self.root, 
-            text="Clear Output", 
-            command=self.clear_output, 
-        )
+        self.clear_output_button = tk.Button(self.root, text="Clear Output", command=self.clear_output)
         self.clear_output_button.pack(fill=tk.X)
 
         # Change colors button
-        self.change_colors_button = tk.Button(
-            self.root,
-            text="Change Color Scheme",
-            command=self.open_color_popup,
-        )
+        self.change_colors_button = tk.Button(self.root, text="Change Color Scheme", command=self.open_color_popup)
         self.change_colors_button.pack(fill=tk.X)
 
-        self.reset_colors_button = tk.Button(
-            self.root,
-            text="Reset to Default Colors",
-            command=lambda: self.set_colors(
-                DEFAULT_PRIMARY_COLOR, 
-                DEFAULT_SECONDARY_COLOR
-            )
-        )
+        self.reset_colors_button = tk.Button(self.root, text="Reset to Default Colors",command=lambda: self.set_colors(DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR))
         self.reset_colors_button.pack(fill=tk.X)
 
         # SET COLORS TO THE DEFAULTS UPON STARTUP
-        self.set_colors(DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR)
-
+        #self.set_colors(DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR) #broken by ttk notebook
+    
     def get_inputs(self, entry1, entry2, popup):
             input1 = entry1.get()
             input2 = entry2.get()
@@ -264,14 +245,12 @@ class GUI:
         )
         cancel_button.pack(side="right", padx=5, pady=5)
 
-
     def set_colors(self, color1, color2): 
         # All frames are color1 or what they were before. 
         frames = [
             self.root,
             self.left_frame,
             self.inner_memory_frame,
-            self.buttons_frame,
             self.file_buttons_frame,
             self.execute_buttons, 
         ]
@@ -297,6 +276,7 @@ class GUI:
             self.change_colors_button,
             self.memory_canvas,
             self.reset_colors_button,
+            self.execute_buttons
         ]
 
         #manually set the colors of the labels
@@ -326,7 +306,6 @@ class GUI:
             for bt in bt_list:  
                 bt.config(bg=color2)
             
-
     def is_arrow_break(self, event):
         if (event.keysym_num < 37) or (event.keysym_num > 40):
             return "break"
@@ -341,63 +320,63 @@ class GUI:
         cursor_pos[0] = int(cursor_pos[0])
         cursor_pos[1] = int(cursor_pos[1])
         
-        if cursor_pos[0] >= 101: #bugfix for trying to write past end of file 
-            self.memory_text.mark_set("insert", "100.0") #move cursor to line 100
+        if cursor_pos[0] >= self.uv_sim.memory.max + 1: #bugfix for trying to write past end of file 
+            self.memory_text.mark_set("insert", f"{float(self.uv_sim.memory.max)}") #move cursor to max line
             return
 
         match event.keysym_num: #checks what keysym was pressed
             case 65288:     # backspace
                 if self.memory_text.tag_ranges(tk.SEL): #added this to allow user to delete an entire selection instead of just one char at a time
                     self.memory_text.delete(tk.SEL_FIRST, tk.SEL_LAST)
-                    self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                    self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
                 else:
                     if cursor_pos[1] > 0:
                         self.memory_text.delete(f"{cursor_pos[0]}.{cursor_pos[1]-1}", f"{cursor_pos[0]}.{cursor_pos[1]}")
-                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                        self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
                     elif self.get_memory_line(cursor_pos[0]-1) == "":
                         self.memory_text.delete(f"{cursor_pos[0]-1}.0", f"{cursor_pos[0]}.0")
-                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                        self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
                     elif self.get_memory_line(cursor_pos[0]) == "":
                         self.memory_text.delete(f"{cursor_pos[0]}.0", f"{cursor_pos[0]+1}.0")
                         self.memory_text.mark_set("insert", f"{cursor_pos[0]-1}.{len(self.get_memory_line(cursor_pos[0]-1))}")
-                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                        self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
                     else:
                         self.memory_text.mark_set("insert", f"{cursor_pos[0]-1}.{len(self.get_memory_line(cursor_pos[0]-1))}")
             case 65293:    # return
                 if cursor_pos[0] < self.uv_sim.memory.max:
                     self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "\n")
-                    self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                    self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
             case 43:   # plus
                 if (event.state == 1) and (cursor_pos[1] == 0):
                     try:
                         first_char = self.get_memory_line(cursor_pos[0])[0]
                         if (first_char != "+") and (first_char != "-"):
                             self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "+")
-                            self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                            self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
                     except:
                         self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "+")
-                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                        self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
             case 45:   # minus
                 if cursor_pos[1] == 0:
                     try:
                         first_char = self.get_memory_line(cursor_pos[0])[0]
                         if (first_char != "+") and (first_char != "-"):
                             self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "-")
-                            self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                            self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
                     except:
                         self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "-")
-                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                        self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
             case _:
                 # integer
                 if (event.keysym_num >= 48) and (event.keysym_num <= 57):
                     try:
                         line_value = int(self.get_memory_line(cursor_pos[0]))
-                        if abs(line_value) < 10**4:
+                        if abs(line_value) < 10**6: #this is where we control line length from user input
                             self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", event.char)
-                            self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                            self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
                     except ValueError:
                         self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", event.char)
-                        self.memory_title_label.config(text="MEMORY_LABEL_UNSAVED_CHANGES")
+                        self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
 
     def shortcut(self, event):
         if event.state & 4:
@@ -431,7 +410,7 @@ class GUI:
             self.output_text.configure(state="normal")
             self.output_text.insert(tk.END, "\n> ")
             self.output_text.configure(state="disabled")
-        self.uv_sim = uvsim.UVSim("gui")
+        self.uv_sim = uvsim.UVSim(gui=True)
         self.update_memory_text()
         self.memory_title_label.config(text=MEMORY_LABEL)
 
@@ -511,9 +490,9 @@ class GUI:
         self.accumulator_text.delete(1.0, tk.END)
         self.accumulator_text.insert(tk.END, self.uv_sim.accumulator)
         self.accumulator_text.config(state="disabled")
-        for address, value in enumerate(self.uv_sim.memory.memory_array): #i don't remember why i changed this
+        for address, value in enumerate(self.uv_sim.memory.memory_array):
             if value is not None:
-                if address == 99:
+                if address == self.uv_sim.memory.max:
                     self.memory_text.insert(tk.END, value)
                 else: 
                     self.memory_text.insert(tk.END, f"{value}\n") 
@@ -569,8 +548,8 @@ class GUI:
         total_lines = len(lines) + len(lines_to_paste)
         
         # Truncate pasted text if it exceeds the limit
-        if total_lines > 100:
-            excess_lines = total_lines - 100
+        if total_lines > self.uv_sim.memory.max:
+            excess_lines = total_lines - self.uv_sim.memory.max
             lines_to_paste = lines_to_paste[:-excess_lines]
 
         for line in lines_to_paste:
@@ -588,5 +567,5 @@ class GUI:
 if __name__ == "__main__":
     root = tk.Tk()
     root.minsize(width=800, height=400)
-    uv_sim_gui = GUI(root)
+    gui_handler = GUIHandler(root)
     root.mainloop()

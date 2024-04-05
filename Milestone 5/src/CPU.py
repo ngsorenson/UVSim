@@ -1,9 +1,12 @@
 class CPU:
+    def __init__(self, max_val):
+        self.max_value= max_val
+
     def ADD(self, accumulator, value):
         '''returns accumulator + value if both are ints'''
         if isinstance(accumulator, int) and isinstance(value, int):
             output = accumulator + value
-            while abs(output) > 9999:
+            while abs(output) > self.max_value:
                 output = output // 10
                 print("Overflow on operation: truncating")
             return output
@@ -14,7 +17,7 @@ class CPU:
         '''returns accumulator - value if both are ints'''
         if isinstance(accumulator, int) and isinstance(value, int):
             output = accumulator - value
-            while abs(output) > 9999:
+            while abs(output) > self.max_value:
                 output = output // 10
                 print("Overflow on operation: truncating")
             return output
@@ -24,7 +27,7 @@ class CPU:
         '''returns accumulator * value if both are ints'''
         if isinstance(accumulator, int) and isinstance(value, int):
             output = accumulator * value
-            while abs(output) > 9999:
+            while abs(output) > self.max_value:
                 output = output // 10
                 print("Overflow on operation: truncating")
             return output
@@ -35,7 +38,7 @@ class CPU:
         if isinstance(accumulator, int) and isinstance(value, int):
             if value != 0:
                 output = accumulator // value
-                while abs(output) > 9999:
+                while abs(output) > self.max_value:
                     output = output // 10
                     print("Overflow on operation: truncating")
                 return output

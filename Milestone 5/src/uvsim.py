@@ -2,8 +2,6 @@ from CPU import CPU
 from memory import Memory
 import tkinter.simpledialog
 
-MEMORY_SIZE = 100
-
 def is_EOF(value):
     return abs(int(value)) >= 10**4
 
@@ -12,7 +10,7 @@ class UVSim:
     the behavior of some functions to allow them to work with gui, 
     self.output is a list of outputs returned py run_program"""
 
-    def __init__(self, gui = None):
+    def __init__(self, version = 2, gui = False):
 
         self.gui = gui
         self.accumulator = 0             # current word
@@ -20,9 +18,14 @@ class UVSim:
         self.address = None              # current address for instruction
         self.program_counter = 0         # current address in program
         self.is_running = False          # is a program currently running
-        self.cpu = CPU()
-        self.memory = Memory(MEMORY_SIZE)
         self.output = None
+        self.version = version 
+        if self.version==1:
+            self.memory = Memory(100)
+            self.cpu=CPU(10**4)
+        elif self.version==2:
+            self.memory=Memory(250) 
+            self.cpu=CPU(10**6)
 
     def store_program_in_memory(self, arg):
         """ Writes data from file (specified by file_name) starting at memory address 0. """
@@ -69,7 +72,7 @@ class UVSim:
 
     def run_program(self, start_location = 0):
         """ Runs program starting at a given memory address (defaults to 0). """
-
+                
         self.step_program(start_location)   # note: this line is neccessary to make sure self.is_running is true before starting the while loop (still works as expected when halt is reached on this line)
         while self.is_running:
             self.step_program()
