@@ -2,8 +2,8 @@ from CPU import CPU
 from memory import Memory
 import tkinter.simpledialog
 
-def is_EOF(value):
-    return abs(int(value)) >= 10**6
+def is_EOF(value): #this probably won't work anymore since we need two files types, should we just delete it and get rid of the appended error line?
+    return abs(int(value)) >= 10**4
 
 class UVSim:
     """passing anything into the constructor for gui will change
