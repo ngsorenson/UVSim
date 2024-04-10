@@ -314,10 +314,42 @@ class GUI:
                 bt.config(bg=color2)
     
     def change_version(self):
-        new_version = simpledialog.askinteger("Change UVSim Version", "What UVSim version would you like to switch to?")
-        if new_version is not None:
-            self.uv_sim.change_version(new_version)
+        version_popup = tk.Toplevel()
+        version_popup.title("Change UVSim Version")
+        text=tk.Label(version_popup, text="What UVSim version would you like to switch to?")
+        text.pack()
+        versions = ["v1 - 4 bit", "v2 - 6 bit"]
+        clicked = tk.StringVar()
+        if self.uv_sim.version == 1:
+            clicked.set(f'v{self.uv_sim.version} - 4 bit')
+        elif self.uv_sim.version == 2:
+            clicked.set(f'v{self.uv_sim.version} - 6 bit')
+
+        drop = tk.OptionMenu(version_popup, clicked, *versions ) 
+        drop.pack() 
+
+        warning=tk.Label(version_popup, text="Changing versions with a program loaded into memory will corrupt the program in memory (but not the source file)")
+        warning.pack()
+
+        confirm_button = tk.Button(version_popup, text = "Confirm", command=lambda:self.change_version_helper(clicked.get(), version_popup))
+        confirm_button.pack(side="left", anchor='center')
+
+        cancel_button = tk.Button(version_popup, text="Cancel", command=version_popup.destroy)
+        cancel_button.pack(side='right', anchor='center')
+
+    def change_version_helper(self, selected_version, version_popup):
+        '''need this separate function to capture what is selected on click event'''
+        match selected_version:
+            case "v1 - 4 bit":
+                version = 1
+                
+            case "v2 - 6 bit":
+                version = 2
+
+        if version is not None:
+            self.uv_sim.change_version(version)
             self.update_memory_text()
+            version_popup.destroy()
             
     def is_arrow_break(self, event):
         self.shortcut(event)
