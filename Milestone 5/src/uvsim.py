@@ -56,7 +56,7 @@ class UVSim:
             if identified_type is None:
                 raise SyntaxError("Invalid syntax for UVSim program")
             if identified_type != self.program_class:
-                user_input = tkinter.messagebox.askyesno("UVSim Version Change", f"This program may be best suited for UVSim Version {identified_type.UV_SIM_VERSION}.x. Would you like to switch versions?")
+                user_input = tkinter.messagebox.askyesno("UVSim Version Change", f"This program may be best suited for UVSim Version {identified_type.UV_SIM_VERSION}. If you do not switch to this version, you may experience data loss or need to rewrite your program. Would you like to switch versions?")
                 if user_input:
                     self.program_class = identified_type
                     self.version = self.program_class.UV_SIM_VERSION
