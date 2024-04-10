@@ -1,78 +1,71 @@
 from CPU import CPU
 from memory import Memory
+from program import Program, FourBitProgram, SixBitProgram
 import tkinter.simpledialog
-
-def is_EOF(value): #this won't work anymore, needs fixing or removing
-    return abs(int(value)) >= 10**4
 
 class UVSim:
     """passing anything into the constructor for gui will change
     the behavior of some functions to allow them to work with gui, 
     self.output is a list of outputs returned py run_program"""
 
-    def __init__(self, version = 2, gui = False):
+    # versions of UVSim corresponding to different program classes
+    program_versions = {
+        FourBitProgram.UV_SIM_VERSION: FourBitProgram,
+        SixBitProgram.UV_SIM_VERSION: SixBitProgram
+    }
 
-        self.gui = gui
+    def __init__(self, version = SixBitProgram.UV_SIM_VERSION, gui = False):
+
+        self.gui = gui                  # is there a gui
+
         self.accumulator = 0             # current word
         self.op_code = None              # current instruction
         self.address = None              # current address for instruction
         self.program_counter = 0         # current address in program
         self.is_running = False          # is a program currently running
         self.output = None
-        self.version = version 
-        
-        if self.version==1:
-            self.max_value = 100
-        elif self.version==2:
-            self.max_value = 250
-        self.memory = Memory(self.max_value)
-        self.cpu = CPU(self.max_value)
+    
+        self.version = version          # uvsim version
+        self.program_class = UVSim.program_versions[self.version]       # program type class
+        self.memory = Memory(self.program_class.MAX_PROGRAM_LENGTH)     # memory instance
+        self.cpu = CPU(10**self.program_class.MAX_LINE_LENGTH - 1)      # cpu instance 
 
-    def store_program_in_memory(self, arg):
+        self.current_program = None     # current instance of the current program class
+
+    def change_version(self, new_version):
+
+        if not new_version in UVSim.program_versions.keys():
+            raise ValueError(f"Version {new_version} does not exist")
+        
+        if new_version == self.version:
+            return
+        
+        self.version = new_version
+        self.program_class = UVSim.program_versions[self.version]
+
+        if self.current_program is not None:
+            self.current_program = self.program_class(self.current_program)
+            self.memory.import_program(self.current_program)
+
+    def store_program_in_memory(self, file_lines, starting_line = 0, skip_identification = False):
         """ Writes data from file (specified by file_name) starting at memory address 0. """
 
         self.is_running = False
-
-        if isinstance(arg, str):
-
-            file_name = arg
-
-            with open(file_name, "r") as file:
-
-                # write to memory, making sure to not go over the memory size. 
-                for i, line in enumerate(file):
-                    if (len(line) > 0) and (line != "\n"):
-                        self.accumulator = line
-                        self.address = i
-                        self.memory.STORE(self.accumulator, self.address)
-                    else:
-                        self.address = i
-                        self.memory.DELETE(self.address)
-
-                # write EOF flag as a way to end execution w/o a HALT cmd.
-                if not is_EOF(self.accumulator):
-                    self.memory.STORE(99999, (self.address + 1))
-
-                self.accumulator = 0
-        
-        elif isinstance(arg, list):
-
-            # write to memory, making sure to not go over the memory size. 
-            for i, line in enumerate(arg):
-                if len(line) > 0:
-                    self.accumulator = int(line)
-                    self.address = i
-                    # print(self.address, ":", self.accumulator)
-                    self.memory.STORE(self.accumulator, self.address)
-                else:
-                    self.address = i
-                    self.memory.DELETE(self.address)
-
-            self.accumulator = 0
-
+        if not skip_identification:
+            identified_type = Program.program_type(file_lines)
+            if identified_type is None:
+                raise SyntaxError("Invalid syntax for UVSim program")
+            if identified_type != self.program_class:
+                user_input = tkinter.simpledialog.askstring("UVSim Version Change", f"This program may be best suited for UVSim Version {identified_type.UV_SIM_VERSION}.x. Would you like to switch versions? (yes or no): ").lower()
+                if (user_input == "yes") or (user_input == "y"):
+                    self.program_class = identified_type
+                    self.version = self.program_class.UV_SIM_VERSION
+        self.current_program = self.program_class(file_lines, starting_line)
+        self.memory.import_program(self.current_program)
 
     def run_program(self, start_location = 0):
         """ Runs program starting at a given memory address (defaults to 0). """
+        
         self.step_program(start_location)   # note: this line is neccessary to make sure self.is_running is true before starting the while loop (still works as expected when halt is reached on this line)
         while self.is_running:
             self.step_program()
@@ -89,12 +82,12 @@ class UVSim:
         current_line = self.memory.LOAD(self.program_counter)
         if current_line is None:
             self.is_running = False
-            raise SyntaxError(f"Line {self.program_counter} does not match any valid instructions.")
-        if is_EOF(current_line):   # check for end of file value
+            raise SyntaxError(f"Line {self.program_counter} cannot be read because it is empty")
+        if current_line == self.program_class.EOF_FLAG():   # check for end of file value
             self.is_running = False
-            raise EOFError("End of file flag reached.")
-        self.op_code = int(current_line / 100)  # extracts first 2 digits from current line
-        self.address = current_line - (self.op_code * 100)  # extracts last 2 digits from current line
+            raise EOFError("End of file flag reached")
+        self.op_code = self.program_class.get_op_code(current_line)  # extracts first 2 digits from current line
+        self.address = self.program_class.get_address(current_line) # extracts last 2 digits from current line
 
         match self.op_code:
             case 10:
@@ -131,4 +124,4 @@ class UVSim:
                 self.is_running = False 
             case _:
                 self.is_running = False
-                raise SyntaxError(f"Line {self.program_counter} does not match any valid instructions.")
+                raise SyntaxError(f"Line {self.program_counter} does not match any valid instructions")

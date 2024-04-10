@@ -1,3 +1,5 @@
+from program import Program
+
 MEMORY_SIZE = 100
 
 class Memory:
@@ -117,7 +119,14 @@ class Memory:
 				f"Not deleted from memory. "
 			)
 
-
+	def import_program(self, program):
+		if not isinstance(program, Program):
+			raise TypeError("Program to be imported must be of type Program")
+		for i, line in enumerate(program.program_list):
+			if line == None:
+				self.DELETE(program.program_location + i)
+			else:
+				self.STORE(line, program.program_location + i)
 			
 
 def main(): 

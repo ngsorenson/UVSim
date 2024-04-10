@@ -1,12 +1,14 @@
 import tkinter as tk
-from tkinter import ttk, filedialog
+from tkinter import ttk, filedialog, simpledialog
 import uvsim
 import re
+from file_formatter import TxtFormatter
 
 DEFAULT_PRIMARY_COLOR = '#4C721D'    # UVU GREEN 
 DEFAULT_SECONDARY_COLOR = '#FFFFFF'  # UVU WHITE
 
 # labels
+ROOT_LABEL = "UVSim"
 ACC_LABEL = "ACCUMULATOR: "
 MEMORY_LABEL = "MEMORY CONTENTS"
 OUTPUT_LABEL = "OUTPUT"
@@ -21,7 +23,7 @@ class GUIHandler:
     def __init__(self, root):
         self.tab_number = 1
         self.root = root
-        self.root.title("UVSim")
+        self.root.title(ROOT_LABEL)
 
         self.notebook = ttk.Notebook(self.root)
         self.notebook.pack(fill=tk.BOTH, expand=True)
@@ -43,8 +45,9 @@ class GUIHandler:
         add_tab_button.pack(side='right')
         tab_management_buttons.pack(anchor='ne', side="top")
 
-        uv_sim = uvsim.UVSim(gui=True) # will create whatever the default version parameter of uvsim is
-        GUI(tab, uv_sim)
+        # uv_sim = uvsim.UVSim(gui=True) # will create whatever the default version parameter of uvsim is
+        # GUI(tab, uv_sim)
+        GUI(tab)
     
     def close_tab(self, tab):
         total_tabs = self.notebook.index('end')
@@ -72,10 +75,10 @@ class GUIHandler:
         return style
 
 class GUI:
-    def __init__(self, tab, uv_sim):
-        self.uv_sim = uv_sim
+    def __init__(self, tab, version = 2):
+        self.uv_sim = uvsim.UVSim(version, True)
         self.root = tab #self.root is now referencing the tab parent in the ttk notebook from GUIHandler
-        self.root.bind("<KeyRelease>", self.shortcut)
+        # self.root.bind("<KeyPress>", self.shortcut)   # this key binding event is now handled in the key binding event for arrow keys
 
         # Left frame
         self.left_frame = tk.Frame(self.root)
@@ -112,11 +115,11 @@ class GUI:
         self.inner_memory_frame = tk.Frame(self.memory_canvas)
 
         #Line Numbers
-        self.memory_line_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=self.uv_sim.max_value+2, width=3) #related to comment a few lines below
+        self.memory_line_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=self.uv_sim.program_class.MAX_PROGRAM_LENGTH+2, width=3) #related to comment a few lines below
         self.memory_line_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_line_text.configure(state="disabled")
 
-        self.memory_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=self.uv_sim.max_value + 1) # need to show max+1 otherwise max is cut off memory_text
+        self.memory_text = tk.Text(self.inner_memory_frame, wrap="none", padx=5, height=self.uv_sim.program_class.MAX_PROGRAM_LENGTH + 1) # need to show max+1 otherwise max is cut off memory_text
         
         self.memory_text.pack(side=tk.LEFT, fill=tk.Y, expand=True)
         self.memory_text.bind("<Key>", self.is_arrow_break)
@@ -176,6 +179,10 @@ class GUI:
         # Reinitialize button
         self.reinitialize_button = tk.Button(self.root, text="Reinitialize UVSim", command=self.initialize_uvsim)
         self.reinitialize_button.pack(fill=tk.X)
+
+        # Change version button
+        self.version_button = tk.Button(self.root, text="Change Version", command=self.change_version)
+        self.version_button.pack(fill=tk.X)
         
         # Clear Output button
         self.clear_output_button = tk.Button(self.root, text="Clear Output", command=self.clear_output)
@@ -305,9 +312,16 @@ class GUI:
         if is_valid_hex_code(color2):
             for bt in bt_list:  
                 bt.config(bg=color2)
+    
+    def change_version(self):
+        new_version = simpledialog.askinteger("Change UVSim Version", "What UVSim version would you like to switch to?")
+        if new_version is not None:
+            self.uv_sim.change_version(new_version)
+            self.update_memory_text()
             
     def is_arrow_break(self, event):
-        if (event.keysym_num < 37) or (event.keysym_num > 40):
+        self.shortcut(event)
+        if event.keysym not in ("Left", "Right", "Up", "Down"):
             return "break"
         else:
             return ""
@@ -347,7 +361,7 @@ class GUI:
                     self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "\n")
                     self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
             case 43:   # plus
-                if (event.state == 1) and (cursor_pos[1] == 0):
+                if (event.state & 1) and (cursor_pos[1] == 0):
                     try:
                         first_char = self.get_memory_line(cursor_pos[0])[0]
                         if (first_char != "+") and (first_char != "-"):
@@ -370,8 +384,8 @@ class GUI:
                 # integer
                 if (event.keysym_num >= 48) and (event.keysym_num <= 57):
                     try:
-                        line_value = int(self.get_memory_line(cursor_pos[0]))
-                        if abs(line_value) < 10**6: #this is where we control line length from user input
+                        line_value = self.get_memory_line(cursor_pos[0])
+                        if (len(line_value) <= self.uv_sim.program_class.MAX_LINE_LENGTH) or (((line_value[0] == "+") or (line_value[0] == "-")) and (len(line_value[1:]) < self.uv_sim.program_class.MAX_LINE_LENGTH)): #this is where we control line length from user input
                             self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", event.char)
                             self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
                     except ValueError:
@@ -401,7 +415,7 @@ class GUI:
             self.output_text.configure(state="normal")
             self.output_text.insert(tk.END, "\n> ")
             self.output_text.configure(state="disabled")
-        self.uv_sim.store_program_in_memory(self.get_gui_memory_contents())
+        self.uv_sim.store_program_in_memory(self.get_gui_memory_contents(), skip_identification=True)
         self.update_memory_text()
         self.memory_title_label.config(text=MEMORY_LABEL)
 
@@ -410,7 +424,7 @@ class GUI:
             self.output_text.configure(state="normal")
             self.output_text.insert(tk.END, "\n> ")
             self.output_text.configure(state="disabled")
-        self.uv_sim = uvsim.UVSim(gui=True)
+        self.uv_sim = uvsim.UVSim(self.uv_sim.version, True)
         self.update_memory_text()
         self.memory_title_label.config(text=MEMORY_LABEL)
 
@@ -423,7 +437,7 @@ class GUI:
         self.memory_title_label.config(text=MEMORY_LABEL)
         if file_name:
             self.initialize_uvsim()
-            self.uv_sim.store_program_in_memory(file_name)
+            self.uv_sim.store_program_in_memory(TxtFormatter.format_file(file_name))
             self.update_memory_text()
             self.output_text.configure(state="normal")
             self.output_text.insert(tk.END, f"File loaded successfully from {file_name}.\n> ")
@@ -490,18 +504,26 @@ class GUI:
         self.accumulator_text.delete(1.0, tk.END)
         self.accumulator_text.insert(tk.END, self.uv_sim.accumulator)
         self.accumulator_text.config(state="disabled")
+        self.memory_text.configure(height=self.uv_sim.program_class.MAX_PROGRAM_LENGTH+1)
         for address, value in enumerate(self.uv_sim.memory.memory_array):
             if value is not None:
-                if address == self.uv_sim.memory.max:
-                    self.memory_text.insert(tk.END, value)
-                else: 
-                    self.memory_text.insert(tk.END, f"{value}\n") 
+                value_str = str(abs(value))
+                line = value_str.rjust(self.uv_sim.program_class.MAX_LINE_LENGTH, "0")
+                if len(line) <= self.uv_sim.program_class.MAX_LINE_LENGTH:
+                    if value >= 0:
+                        line = "+" + line
+                    else:
+                        line = "-" + line
+                if address != self.uv_sim.memory.max:
+                    line += "\n"
+                self.memory_text.insert(tk.END, line) 
 
         self.memory_line_text.config(state="normal")
         self.memory_line_text.delete(1.0, tk.END)
         self.memory_line_text.tag_configure("right", justify="right")
+        self.memory_line_text.configure(height=self.uv_sim.program_class.MAX_PROGRAM_LENGTH+2)
         newline = ""
-        for i in range(0, self.uv_sim.memory.max):
+        for i in range(0, self.uv_sim.program_class.MAX_PROGRAM_LENGTH):
             if self.uv_sim.is_running and (self.uv_sim.program_counter == i):
                 if i < 10:
                     self.memory_line_text.insert(tk.END, f"{newline}> {i}")
