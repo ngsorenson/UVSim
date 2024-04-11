@@ -10,22 +10,33 @@ UVSim is a simple CPU simulator that emulates a hypothetical machine language. I
 4. `main.py`: An example script demonstrating how to use the UVSim class to load and run a program.
 5. `gui.py`: Implements the GUI class for a user-friendly interface to interact with UVSim. 
 
-## Usage:
-1. Ensure you have Python 3 or later installed on your system.
-2. Run the program by executing the `gui.py` script:
-   - `python3 gui.py`
-3. The GUI window will pop up:
-   In the GUI window, you will find 9 buttons:
-      1. `Load Program`: Click this button to select a program file and load it into the simulator. The loaded program will be displayed in the "Log" window.
-      2. `Save Program`: Click this button when you are ready to save the program file to a location you choose.
-      3. `Run Program`: After loading a program, click this button to run the program. You will be prompted to input a 4-digit word, and the program will execute, displaying the output in the "Log" window.
-      4. `Step Program`: This button will step through the program waiting for you to press it again for each step. 
-      5. `Stop Program`: This button will stop the program.
-      6. `Reinitialize UVSim`: Click this button to clear the memory and reset the program state without closing the application.
-      7. `Clear Output`: Clears the output in the output field.
-      8. `Change Color Scheme`: Allows the user to put hex codes for primary and secondary colors.
-      9. `Reset to Default Colors`: Sets the color scheme back to UVU colors.
+## Usage: 
 
+1. Navigate to the directory containing the source code (`'.\Milestone 5\src\'`).
+2. Ensure you have Python 3 or later installed on your system.
+3. Run the program by executing the `gui.py` script:
+   - `python3 gui.py`
+4. The GUI window will pop up. Inside the GUI window, you will find 9 buttons:
+   1. `Load Program`: Click this button to select a program file and load it into the simulator. The loaded program will be displayed in the "Log" window.
+   2. `Save Program`: Click this button when you are ready to save the program file to a location you choose.
+   3. `Run Program`: After loading a program, click this button to run the program. You will be prompted to input a 4-digit word, and the program will execute, displaying the output in the "Log" window.
+   4. `Step Program`: This button will step through the program waiting for you to press it again for each step.
+   5. `Stop Program`: This button will stop the program.
+   6. `Reinitialize UVSim`: Click this button to clear the memory and reset the program state without closing the application.
+   7. `Clear Output`: Clears the output in the output field.
+   8. `Change Color Scheme`: Allows the user to put hex codes for primary and secondary colors.
+   9. `Reset to Default Colors`: Sets the color scheme back to UVU colors.
+5. Click `Load Program`, then pick a file you would like UVSim to run.
+6. Once the program is loaded into UVSim, to run the program continuously click `Run Program`.
+7. Or you can click `Step Program` to have UVSim execute 1 line then wait for you to click `Step Program` again.
+8. You can continue to step the program until it finishes or click `Stop Program` to halt it.
+9. Regardless, UVSim will follow the instructions according to the program you have loaded in, prompting you when needed for input.
+10. You can also choose to edit the program you loaded in by editing the Memory Contents field.
+11. Make sure to press "Ctrl + s" to save your edits before clicking `Run Program` to run the program like before.
+12. Running multiple files:
+    - To run another file if you would like to clear the memory, click the Reinitialize UVSim, then load your new file into UVSim and run it using the `Run Program` button.
+    - You can also clear the output section by clicking the `Clear Output` button.
+    - Also, feel free to customize the color scheme by using the buttons `Change Color Scheme` and `Reset to Default Colors`.
 4. Click `Load Program`, then pick a file you would like UVSim to run.
 5. Once program is loaded into UVSim, to run the program continuously click `Run Program`.
 6. Or you can click `Step Program` to have UVSim execute 1 line then wait for you to click `Step Program` again.
