@@ -328,7 +328,7 @@ class GUI:
         drop = tk.OptionMenu(version_popup, clicked, *versions ) 
         drop.pack() 
 
-        warning=tk.Label(version_popup, text="Changing versions with a program loaded into memory will corrupt the program in memory (but not the source file)")
+        warning=tk.Label(version_popup, text="Changing versions with a program loaded into memory may corrupt the program in memory (but not the source file)")
         warning.pack()
 
         confirm_button = tk.Button(version_popup, text = "Confirm", command=lambda:self.change_version_helper(clicked.get(), version_popup))
@@ -588,14 +588,12 @@ class GUI:
         try:
             self.memory_text.delete(tk.SEL_FIRST, tk.SEL_LAST)  # Delete selected text if any
         except:
-            pass
-        
-        #find how many lines we currently have
-        lines= self.memory_text.get("1.0", "end").split("\n")
-        
-        for line in lines: #fixes an issue with not being able to paste a full 100 lines into an empty window 
-            if line == '':
-                lines.remove(line)
+            pass #if no selected text, do nothing
+
+        lines= self.memory_text.get("1.0", "end").split("\n") #find how many lines we currently have
+
+        lines = list(filter(None, lines)) #remove empty strings
+
 
         # Count how many lines will be pasted
         lines_to_paste = pasted_text.split("\n")
