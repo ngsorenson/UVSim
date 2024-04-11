@@ -1,0 +1,29 @@
+Meeting Report
+
+
+Meeting Date: [04-04-2024]
+
+Meeting Time: [5:30pm] - [6:00pm]
+
+Location: [Microsoft Teams]
+
+Attendees:
+Ty Didericksen, Noah Sorenson, Thomas Chappell, Tate Thomas
+
+Agenda Items:
+Discuss open issues
+
+Memory/CPU not being reinitialized on version switch until reinitialize uvsim is clicked?
+
+Ctrl + S not working properly when switching versions and then adding lines? Only working once?
+
+
+Prepare for milestone 5 submission
+
+Action Items:
+Thomas is working on colors and will have something by tonight
+Ty is waiting for final bugfixes before updating artifacts/auditing program
+Tate’s looking at issue #31 to see if it’s an easy fix
+
+
+Additional Notes:
