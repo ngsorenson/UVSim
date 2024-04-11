@@ -43,6 +43,9 @@ class UVSim:
         self.version = new_version
         self.program_class = UVSim.program_versions[self.version]
 
+        self.memory = Memory(self.program_class.MAX_PROGRAM_LENGTH)     # update memory instance
+        self.cpu = CPU(10**self.program_class.MAX_LINE_LENGTH - 1)      # update cpu instance 
+
         if self.current_program is not None:
             self.current_program = self.program_class(self.current_program)
             self.memory.import_program(self.current_program)
