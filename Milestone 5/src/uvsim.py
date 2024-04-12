@@ -86,10 +86,8 @@ class UVSim:
             current_line = self.memory.LOAD(self.program_counter)
 
             if current_line is None:
-                self.is_running = False
                 raise SyntaxError(f"Line {self.program_counter} cannot be read because it is empty")
             if current_line == self.program_class.EOF_FLAG():   # check for end of file value
-                self.is_running = False
                 raise EOFError("End of file flag reached")
         
             self.op_code = self.program_class.get_op_code(current_line)  # extracts first 2 digits from current line
