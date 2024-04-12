@@ -81,50 +81,57 @@ class UVSim:
             self.program_counter = start_location - 1
             self.is_running = True
 
-        self.program_counter += 1
-        current_line = self.memory.LOAD(self.program_counter)
-        if current_line is None:
-            self.is_running = False
-            raise SyntaxError(f"Line {self.program_counter} cannot be read because it is empty")
-        if current_line == self.program_class.EOF_FLAG():   # check for end of file value
-            self.is_running = False
-            raise EOFError("End of file flag reached")
-        self.op_code = self.program_class.get_op_code(current_line)  # extracts first 2 digits from current line
-        self.address = self.program_class.get_address(current_line) # extracts last 2 digits from current line
+        try:
+            self.program_counter += 1
+            current_line = self.memory.LOAD(self.program_counter)
 
-        match self.op_code:
-            case 10:
-                if self.gui:
-                    value = tkinter.simpledialog.askinteger("Input value:", "Input 4 digit word to read into memory (prepending a negative is allowed)")
-                    self.memory.READ(self.address, value)
-                else:
-                    self.memory.READ(self.address)
-            case 11:
-                if self.gui:
-                    self.output = self.memory.WRITE(self.address)
-                else: 
-                    print(self.memory.WRITE(self.address))
-            case 20:
-                result = self.memory.LOAD(self.address)
-                self.accumulator = result if result is not None else self.accumulator
-            case 21:
-                self.memory.STORE(self.accumulator, self.address)
-            case 30:
-                self.accumulator = self.cpu.ADD(self.accumulator, self.memory.LOAD(self.address))
-            case 31:
-                self.accumulator = self.cpu.SUBTRACT(self.accumulator, self.memory.LOAD(self.address))
-            case 32:
-                self.accumulator = self.cpu.DIVIDE(self.accumulator, self.memory.LOAD(self.address))
-            case 33:
-                self.accumulator = self.cpu.MULTIPLY(self.accumulator, self.memory.LOAD(self.address))
-            case 40:    # BRANCH
-                self.program_counter = self.address - 1
-            case 41:    # BRANCHNEG
-                self.program_counter = self.address - 1 if self.accumulator < 0 else self.program_counter
-            case 42:    # BRANCHZERO
-                self.program_counter = self.address - 1 if self.accumulator == 0 else self.program_counter
-            case 43:    # HALT
-                self.is_running = False 
-            case _:
+            if current_line is None:
                 self.is_running = False
-                raise SyntaxError(f"Line {self.program_counter} does not match any valid instructions")
+                raise SyntaxError(f"Line {self.program_counter} cannot be read because it is empty")
+            if current_line == self.program_class.EOF_FLAG():   # check for end of file value
+                self.is_running = False
+                raise EOFError("End of file flag reached")
+        
+            self.op_code = self.program_class.get_op_code(current_line)  # extracts first 2 digits from current line
+            self.address = self.program_class.get_address(current_line)  # extracts last 2 digits from current line
+
+            match self.op_code:
+                case 10:
+                    if self.gui:
+                        value = tkinter.simpledialog.askinteger("Input value:", "Input 4 digit word to read into memory (prepending a negative is allowed)")
+                        self.memory.READ(self.address, value)
+                    else:
+                        self.memory.READ(self.address)
+                case 11:
+                    if self.gui:
+                        self.output = self.memory.WRITE(self.address)
+                    else: 
+                        print(self.memory.WRITE(self.address))
+                case 20:
+                    result = self.memory.LOAD(self.address)
+                    self.accumulator = result if result is not None else self.accumulator
+                case 21:
+                    self.memory.STORE(self.accumulator, self.address)
+                case 30:
+                    self.accumulator = self.cpu.ADD(self.accumulator, self.memory.LOAD(self.address))
+                case 31:
+                    self.accumulator = self.cpu.SUBTRACT(self.accumulator, self.memory.LOAD(self.address))
+                case 32:
+                    self.accumulator = self.cpu.DIVIDE(self.accumulator, self.memory.LOAD(self.address))
+                case 33:
+                    self.accumulator = self.cpu.MULTIPLY(self.accumulator, self.memory.LOAD(self.address))
+                case 40:    # BRANCH
+                    self.program_counter = self.address - 1
+                case 41:    # BRANCHNEG
+                    self.program_counter = self.address - 1 if self.accumulator < 0 else self.program_counter
+                case 42:    # BRANCHZERO
+                    self.program_counter = self.address - 1 if self.accumulator == 0 else self.program_counter
+                case 43:    # HALT
+                    self.is_running = False 
+                case _:
+                    self.is_running = False
+                    raise SyntaxError(f"Line {self.program_counter} does not match any valid instructions")
+                
+        except Exception as e:
+            self.is_running = False
+            raise Exception(e)

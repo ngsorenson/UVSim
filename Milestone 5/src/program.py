@@ -8,7 +8,8 @@ class Program(ABC):
         OP_CODES (_tuple_(_int_)): A class attribute that is a tuple of currently recognized opcodes
         validator (_LineValidator_): A line validator object specific for the program type
         program_list (_list_[_int_ or None]): A list of integers or None (for a blank line) representing a program
-        program_location (_int_): The starting location where the program is supposed to reside in memory
+        start_location (_int_): The starting location where the program is supposed to reside in memory
+        end_location (_int_): The ending location where the EOF flag is located
     
     Methods:
         EOF_FLAG (cls=_class_): Abstract class method to create EOF flags for a given class
@@ -20,11 +21,12 @@ class Program(ABC):
 
     OP_CODES = (10, 11, 20, 21, 30, 31, 32, 33, 40, 41, 42, 43)     # currently recognized opcodes
 
-    def __init__(self, program, program_location):
+    def __init__(self, program, start_location):
         """
         Args:
             program (_list_[_string_]): The program represented in a form of a list of strings
-            program_location (_int_): The starting location where the program is supposed to reside in memory
+            start_location (_int_): The starting location where the program is supposed to reside in memory
+            end_location (_int_): The ending location where the EOF flag is located
         """
         
         self.validator = LineValidator(type(self))  # sets up validator custom to the inheriting class
@@ -34,11 +36,12 @@ class Program(ABC):
         self.program_list = self.validator.validate_lines(program)  # create list consisting of valid program lines
         self.program_list.append(type(self).EOF_FLAG())
 
-        if not isinstance(program_location, int):
-            raise TypeError(f"Program location in memory must be an integer, not {type(program_location)}")
-        if (program_location < 0) or (program_location >= type(self).MAX_PROGRAM_LENGTH):
-            raise ValueError(f"Program location must be a valid location in memory ({program_location} was given)")
-        self.program_location = program_location
+        if not isinstance(start_location, int):
+            raise TypeError(f"Program location in memory must be an integer, not {type(start_location)}")
+        if (start_location < 0) or (start_location >= type(self).MAX_PROGRAM_LENGTH):
+            raise ValueError(f"Program location must be a valid location in memory ({start_location} was given)")
+        self.start_location = start_location
+        self.end_location = self.start_location + len(self.program_list) - 1
 
     @classmethod
     @abstractmethod
@@ -177,7 +180,8 @@ class FourBitProgram(Program):
         UV_SIM_VERSION (_int_): A class attribute that is the corresponding UVSim version for this program (Version 1)
         validator (_LineValidator_): A line validator object specific to four bit programs
         program_list (_list_[_int_ or None]): A list of integers or None (for a blank line) representing a program
-        program_location (_int_): The starting location where the program is supposed to reside in memory
+        start_location (_int_): The starting location where the program is supposed to reside in memory
+        end_location (_int_): The ending location where the EOF flag is located
     
     Methods:
         EOF_FLAG (cls=_class_): Class method that returns the EOF flag of this program type (99999)
@@ -191,20 +195,20 @@ class FourBitProgram(Program):
     MAX_PROGRAM_LENGTH = 100
     UV_SIM_VERSION = 1
 
-    def __init__(self, program, program_location=0):
+    def __init__(self, program, start_location=0):
         """
         Args:
             program (_list_[_string_] or _Program_): The program represented in a form of a list of strings, or an instance of an already existing program
-            program_location (_int_): The starting location where the program is supposed to reside in memory, defaulting to 0
+            start_location (_int_): The starting location where the program is supposed to reside in memory, defaulting to 0
         """
         if isinstance(program, list):   # program is not formatted yet, so it is new
-            super().__init__(program, program_location)
+            super().__init__(program, start_location)
         elif isinstance(program, Program):  # program is already a program, just wanting to be converted to a new program type
             try:
-                if program_location != 0:
-                    prog_loc = program_location
+                if start_location != 0:
+                    prog_loc = start_location
                 else:
-                    prog_loc = program.program_location
+                    prog_loc = program.start_location
                 super().__init__(program.to_four_bit(), prog_loc)
             except AttributeError:
                 raise NotImplementedError(f"{type(program).__name__} does not support conversions to {type(self).__name__}.")
@@ -281,7 +285,8 @@ class SixBitProgram(Program):
         UV_SIM_VERSION (_int_): A class attribute that is the corresponding UVSim version for this program (Version 2)
         validator (_LineValidator_): A line validator object specific to six bit programs
         program_list (_list_[_int_ or None]): A list of integers or None (for a blank line) representing a program
-        program_location (_int_): The starting location where the program is supposed to reside in memory
+        start_location (_int_): The starting location where the program is supposed to reside in memory
+        end_location (_int_): The ending location where the EOF flag is located
     
     Methods:
         EOF_FLAG (cls=_class_): Class method that returns the EOF flag of this program type (9999999)
@@ -295,20 +300,20 @@ class SixBitProgram(Program):
     MAX_PROGRAM_LENGTH = 250
     UV_SIM_VERSION = 2
 
-    def __init__(self, program, program_location=0):
+    def __init__(self, program, start_location=0):
         """
         Args:
             program (_list_[_string_] or _Program_): The program represented in a form of a list of strings, or an instance of an already existing program
-            program_location (_int_): The starting location where the program is supposed to reside in memory, defaulting to 0
+            start_location (_int_): The starting location where the program is supposed to reside in memory, defaulting to 0
         """
         if isinstance(program, list):   # program is not formatted yet, so it is new
-            super().__init__(program, program_location)
+            super().__init__(program, start_location)
         elif isinstance(program, Program):  # program is already a program, just wanting to be converted to a new program type
             try:
-                if program_location != 0:
-                    prog_loc = program_location
+                if start_location != 0:
+                    prog_loc = start_location
                 else:
-                    prog_loc = program.program_location
+                    prog_loc = program.start_location
                 super().__init__(program.to_six_bit(), prog_loc)
             except AttributeError:
                 raise NotImplementedError(f"{type(program).__name__} does not support conversions to {type(self).__name__}.")

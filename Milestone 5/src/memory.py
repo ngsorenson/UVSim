@@ -12,6 +12,10 @@ class Memory:
 		self.max = memory_size
 		self.memory_array = [None] * (self.max )
 
+		self.program_bounds = (0, 0)
+
+	def _is_valid_address(self, address):
+		return (address >= self.program_bounds[0]) and (address < self.program_bounds[1])
 
 	def READ(self, address, value = None):
 		"""Reads a word from the keyboard to somewhere in memory. 
@@ -29,6 +33,8 @@ class Memory:
 			while True:
 				try:
 					input_int = int(user_input)
+					if not self._is_valid_address(address):
+						raise IndexError(f"Access at memory address {address} was denied: {address} is outside of allotted memory for program")
 					self.memory_array[address_int] = input_int
 					break
 				except ValueError:
@@ -65,9 +71,10 @@ class Memory:
 			# if address is not in the right range raise an error. 
 			if address_int < self.min or address_int > self.max:
 				raise IndexError(f"Error: Memory address {address_int} is not valid. It must be between {self.min} and {self.max} inclusive.")
-			else:
-				value_at_address_int = self.memory_array[address_int]
-				return value_at_address_int
+			if not self._is_valid_address(address):
+				raise IndexError(f"Access at memory address {address} was denied: {address} is outside of allotted memory for program")
+			value_at_address_int = self.memory_array[address_int]
+			return value_at_address_int
 		except ValueError:
 			raise ValueError(f"Error: Address value {address} is not a valid integer")
 
@@ -89,6 +96,8 @@ class Memory:
 					f"It must be between {self.min} and {self.max} inclusive. "
 					f"Not added to memory. "
 				)
+			if not self._is_valid_address(address):
+				raise IndexError(f"Access at memory address {address} was denied: {address} is outside of allotted memory for program")
 
 			acc_int = int(accumulator)  # See if accumulator is valid.  
 			self.memory_array[address_int] = acc_int
@@ -110,6 +119,8 @@ class Memory:
 					f"Address must be an integer. "
 					f"Not deleted from memory. "
 				)
+			if not self._is_valid_address(address):
+				raise IndexError(f"Access at memory address {address} was denied: {address} is outside of allotted memory for program")
 			
 			self.memory_array[address] = None
 		except ValueError:
@@ -122,11 +133,13 @@ class Memory:
 	def import_program(self, program):
 		if not isinstance(program, Program):
 			raise TypeError("Program to be imported must be of type Program")
+		self.program_bounds = (program.start_location, program.end_location+1)
 		for i, line in enumerate(program.program_list):
 			if line == None:
-				self.DELETE(program.program_location + i)
+				self.DELETE(program.start_location + i)
 			else:
-				self.STORE(line, program.program_location + i)
+				self.STORE(line, program.start_location + i)
+		self.program_bounds = (program.start_location, program.end_location)
 			
 
 def main(): 

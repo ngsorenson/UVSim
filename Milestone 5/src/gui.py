@@ -393,7 +393,7 @@ class GUI:
                     self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "\n")
                     self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
             case 43:   # plus
-                if (event.state & 1) and (cursor_pos[1] == 0):
+                if (event.state & 1) and (cursor_pos[1] == 0) and (len(self.get_memory_line(cursor_pos[0])) <= self.uv_sim.program_class.MAX_LINE_LENGTH):
                     try:
                         first_char = self.get_memory_line(cursor_pos[0])[0]
                         if (first_char != "+") and (first_char != "-"):
@@ -403,7 +403,7 @@ class GUI:
                         self.memory_text.insert(f"{cursor_pos[0]}.{cursor_pos[1]}", "+")
                         self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
             case 45:   # minus
-                if cursor_pos[1] == 0:
+                if (cursor_pos[1] == 0) and (len(self.get_memory_line(cursor_pos[0])) <= self.uv_sim.program_class.MAX_LINE_LENGTH):
                     try:
                         first_char = self.get_memory_line(cursor_pos[0])[0]
                         if (first_char != "+") and (first_char != "-"):
@@ -433,11 +433,19 @@ class GUI:
                     self.save_gui_memory_text()
                 case 118: #v
                     self.paste_text()
+                    self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
                 case 120: #x
                     self.cut_text()
+                    self.memory_title_label.config(text=MEMORY_LABEL_UNSAVED_CHANGES)
+                case 122: #z
+                    self.update_memory_text()
+                    self.memory_title_label.config(text=MEMORY_LABEL)
 
     def get_gui_memory_contents(self):
-        return self.memory_text.get("1.0", "end-1c").split("\n")[:self.uv_sim.memory.max-1]
+        mem_contents = self.memory_text.get("1.0", "end-1c").split("\n")
+        while mem_contents[-1] == "":
+            del mem_contents[-1]
+        return mem_contents[:self.uv_sim.memory.max-1]
     
     def get_memory_line(self, line):
         return self.memory_text.get(f"{line}.0", f"{line+1}.0")[:-1]
@@ -541,14 +549,18 @@ class GUI:
             if value is not None:
                 value_str = str(abs(value))
                 line = value_str.rjust(self.uv_sim.program_class.MAX_LINE_LENGTH, "0")
+                if line == str(self.uv_sim.program_class.EOF_FLAG()):
+                    break
                 if len(line) <= self.uv_sim.program_class.MAX_LINE_LENGTH:
                     if value >= 0:
                         line = "+" + line
                     else:
                         line = "-" + line
-                if address != self.uv_sim.memory.max:
+            else:
+                line = ""
+            if address != self.uv_sim.memory.max:
                     line += "\n"
-                self.memory_text.insert(tk.END, line) 
+            self.memory_text.insert(tk.END, line) 
 
         self.memory_line_text.config(state="normal")
         self.memory_line_text.delete(1.0, tk.END)
