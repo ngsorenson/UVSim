@@ -4,8 +4,12 @@ import uvsim
 import re
 from file_formatter import TxtFormatter
 
-DEFAULT_PRIMARY_COLOR = '#4C721D'    # UVU GREEN 
-DEFAULT_SECONDARY_COLOR = '#FFFFFF'  # UVU WHITE
+# DEFAULT_PRIMARY_COLOR = '#4C721D'    # UVU GREEN 
+# DEFAULT_SECONDARY_COLOR = '#FFFFFF'  # UVU WHITE
+
+# TODO: Testing purposes 
+DEFAULT_PRIMARY_COLOR = '#219ebc'
+DEFAULT_SECONDARY_COLOR = '#023047'
 
 # labels
 ROOT_LABEL = "UVSim"
@@ -13,6 +17,8 @@ ACC_LABEL = "ACCUMULATOR: "
 MEMORY_LABEL = "MEMORY CONTENTS"
 OUTPUT_LABEL = "OUTPUT"
 MEMORY_LABEL_UNSAVED_CHANGES = "MEMORY CONTENTS*"
+FOUR_BIT_VERSION = 1
+SIX_BIT_VERSION = 2
 
 def is_valid_hex_code(s):
     # Regular expression to match hexadecimal color code with '#' symbol required
@@ -75,7 +81,7 @@ class GUIHandler:
         return style
 
 class GUI:
-    def __init__(self, tab, version = 2):
+    def __init__(self, tab, version = SIX_BIT_VERSION):
         self.uv_sim = uvsim.UVSim(version, True)
         self.root = tab #self.root is now referencing the tab parent in the ttk notebook from GUIHandler
         # self.root.bind("<KeyPress>", self.shortcut)   # this key binding event is now handled in the key binding event for arrow keys
@@ -313,6 +319,7 @@ class GUI:
             for bt in bt_list:  
                 bt.config(bg=color2)
     
+
     def change_version(self):
         version_popup = tk.Toplevel()
         version_popup.title("Change UVSim Version")
@@ -336,6 +343,7 @@ class GUI:
 
         cancel_button = tk.Button(version_popup, text="Cancel", command=version_popup.destroy)
         cancel_button.pack(side='right', anchor='center')
+
 
     def change_version_helper(self, selected_version, version_popup):
         '''need this separate function to capture what is selected on click event'''

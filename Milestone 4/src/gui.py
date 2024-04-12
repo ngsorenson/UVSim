@@ -266,7 +266,7 @@ class GUI:
 
 
     def set_colors(self, color1, color2): 
-        # All frames are color1 or what they were before. 
+
         frames = [
             self.root,
             self.left_frame,
@@ -275,7 +275,7 @@ class GUI:
             self.file_buttons_frame,
             self.execute_buttons, 
         ]
-        # All buttons and text are color2 or what they were before. 
+
         bt_list = [
             self.accumulator_frame,
             self.memory_frame,
