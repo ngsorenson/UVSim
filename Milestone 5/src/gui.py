@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, filedialog, simpledialog
+from tkinter import ttk, filedialog
 import uvsim
 import re
 from file_formatter import TxtFormatter
