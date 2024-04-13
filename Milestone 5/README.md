@@ -8,7 +8,11 @@ UVSim is a simple CPU simulator that emulates a hypothetical machine language. I
 2. `memory.py`: Implements the Memory class for managing memory operations (READ, WRITE, LOAD, STORE).
 3. `uvsim.py`: Contains the UVSim class, which serves as a simulator for running programs loaded into memory.
 4. `main.py`: An example script demonstrating how to use the UVSim class to load and run a program.
-5. `gui.py`: Implements the GUI class for a user-friendly interface to interact with UVSim. 
+5. `gui.py`: Implements the GUI class for a user-friendly interface to interact with UVSim.
+6. `line_validator.py`: Contains the `LineValidator` class, which validates program lines based on the program type.
+7. `file_formatter.py`: Provides classes for converting files into a common format for UVSim processing.
+
+
 
 ## Usage: 
 
@@ -26,6 +30,7 @@ UVSim is a simple CPU simulator that emulates a hypothetical machine language. I
    7. `Clear Output`: Clears the output in the output field.
    8. `Change Color Scheme`: Allows the user to put hex codes for primary and secondary colors.
    9. `Reset to Default Colors`: Sets the color scheme back to UVU colors.
+   10. `Change Version`: This button switches between versions of 6-bit files and 4-bit files. (further explained below in Program Structure)
 5. Click `Load Program`, then pick a file you would like UVSim to run.
 6. Once the program is loaded into UVSim, to run the program continuously click `Run Program`.
 7. Or you can click `Step Program` to have UVSim execute 1 line then wait for you to click `Step Program` again.
@@ -38,14 +43,15 @@ UVSim is a simple CPU simulator that emulates a hypothetical machine language. I
     - You can also clear the output section by clicking the `Clear Output` button.
     - Also, feel free to customize the color scheme by using the buttons `Change Color Scheme` and `Reset to Default Colors`.
 4. Click `Load Program`, then pick a file you would like UVSim to run.
-5. Once program is loaded into UVSim, to run the program continuously click `Run Program`.
-6. Or you can click `Step Program` to have UVSim execute 1 line then wait for you to click `Step Program` again.
-7. You can continue to step the program until it finishes or click `Stop Program` to halt it. 
-8. Regardless UVSim will follow the instructions according to the program you have loaded in. Prompting you when needed for input.
-9. You can also choose to edit the program you loaded in by editing the Memory Contents field.
-10. Make sure to press "Ctrl + s" to save your edits before then click `Run Program` to run the program like before.
-11. Running multiple files:
-   - To run another file if you would like to clear the memory, click the Reinitialize UVSim then load your new file into UVSim and run it using the `Run Program` button.
+5. If your program is a 4-bit file or a 6-bit file make sure to choose the correct version using the `Change Version` button. For more explanation read the "Program Instructions" below. 
+6. Once the program is loaded into UVSim, to run the program continuously click `Run Program`.
+7. Or you can click `Step Program` to have UVSim execute 1 line then wait for you to click `Step Program` again.
+8. You can continue to step the program until it finishes or click `Stop Program` to halt it. 
+9. Regardless UVSim will follow the instructions according to the program you have loaded in. Prompting you when needed for input.
+10. You can also choose to edit the program you loaded in by editing the Memory Contents field.
+11. Make sure to press "Ctrl + s" to save your edits before then click `Run Program` to run the program like before.
+12. Running multiple files:
+   - To run another file you can either reinitialize the UVSim program using the `Reinitialize UVSim` button. Or you can add a tab using the `+` button in the top right corner and run another file. 
    - You can also clear the output section by clicking the `Clear Output` button
    - Also feel free to customize the color scheme by using the buttons `Change Color Scheme` and `Reset to Default Colors`
 
@@ -54,22 +60,27 @@ UVSim is a simple CPU simulator that emulates a hypothetical machine language. I
 - `Memory`: Manages memory operations such as reading, writing, loading, and storing values.
 - `UVSim`: The main class for running programs. It loads programs into memory and executes the instructions within either by stepping through the program or running through it.
 - `GUI`: The GUI class provides an intuitive user interface to interact with the UVSim in multiple ways.
+- `LineValidator`: validates program lines based on the program type.
+- `FileFormatter`: abstract class for file formatters in UVSim. It defines a method for converting different file formats into a common format for UVSim processing.
+- `TxtFormatter`: handles the conversion of .txt files into a common format for UVSim processing.
+
+
 
 ## Program Instructions:
-- Programs are stored in plain text files where each line represents an instruction. In each line, the first two digits represent the opcode, while the last two digits represent the location in memory used in the operation. For example, `1036` performs a READ operation (`10`) and stores the value at index `36` in memory. 
+- Programs are stored in plain text files where each line represents an instruction. There are two types of versions of instructions UVSim supports. 4-bit and 6-bit. For the 4-bit version in each line, the first two digits represent the opcode, while the last two digits represent the location in memory used in the operation. For example, `1036` performs a READ operation (`10`) and stores the value at index `36` in memory. For the 6-bit version the first 3 digits are the opcode and the last 3 digits are the location in memory used in the operation. To use the same example `010036` would perform the READ operation and store the value and stores the value at index `036` aka `36` in memory. 
 - The UVSim class recognizes the following opcodes:
-  - READ (10)
-  - WRITE (11)
-  - LOAD (20)
-  - STORE (21)
-  - ADD (30)
-  - SUBTRACT (31)
-  - DIVIDE (32)
-  - MULTIPLY (33)
-  - BRANCH (40)
-  - BRANCHNEG (41)
-  - BRANCHZERO (42)
-  - HALT (43)
+  - READ (10) or (010)
+  - WRITE (11) or (011)
+  - LOAD (20) or (020)
+  - STORE (21) or (021)
+  - ADD (30) or (030)
+  - SUBTRACT (31) or (031)
+  - DIVIDE (32) or (032)
+  - MULTIPLY (33) or (033)
+  - BRANCH (40) or (040)
+  - BRANCHNEG (41) or (041)
+  - BRANCHZERO (42) or (042)
+  - HALT (43) or (043)
 
 ## Error Handling:
 - The program includes basic error handling for file-related issues, invalid addresses, and unrecognized opcodes.
