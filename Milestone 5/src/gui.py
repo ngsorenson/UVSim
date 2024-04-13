@@ -31,7 +31,7 @@ class GUIHandler:
         self.notebook.pack(fill=tk.BOTH, expand=True)
 
         self.create_tab()
-        self.set_guihandler_colors(DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR)
+        self.set_gui_handler_colors(DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR)
 
     def create_tab(self):
         tab = ttk.Frame(self.notebook)
@@ -63,16 +63,17 @@ class GUIHandler:
         if new_name:
             self.notebook.tab(tab, text=new_name)
 
-    def set_guihandler_colors(self, color1, color2):
+    def set_gui_handler_colors(self, color1, color2):
         style = ttk.Style()
         style.theme_use('default')
         if is_valid_hex_code(color1):
             style.configure('TNotebook', background=color1)
-            style.map('TNotebook.Tab', background = [('selected', color1)])
+            style.map('TNotebook.Tab', background = [('selected', color1), ('!selected', color2)])
             style.configure('TFrame', background=color1)
         if is_valid_hex_code(color2):
             style.configure('TButton', background=color2)
             style.configure('CustomButton1.TButton', background=color2)
+
         return style
 
     def window_wiggle(self):
@@ -222,7 +223,7 @@ class GUI:
         self.reset_colors_button = ttk.Button(
             self.root, 
             text="Reset to Default Colors",
-            command=lambda: GUIHandler.set_guihandler_colors(
+            command=lambda: GUIHandler.set_gui_handler_colors(
                 self.gui_handler, 
                 DEFAULT_PRIMARY_COLOR, 
                 DEFAULT_SECONDARY_COLOR
@@ -242,7 +243,7 @@ class GUI:
                 print(f"Error: Secondary color input: '{input2}' was not a valid hex code. No secondary color change.")
             else: 
                 print(f"Secondary color was successfully changed to '{input2}'")
-            GUIHandler.set_guihandler_colors(self.gui_handler, input1, input2)
+            GUIHandler.set_gui_handler_colors(self.gui_handler, input1, input2)
             popup.destroy()
 
 
