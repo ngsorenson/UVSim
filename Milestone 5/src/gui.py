@@ -4,12 +4,8 @@ import uvsim
 import re
 from file_formatter import TxtFormatter
 
-# DEFAULT_PRIMARY_COLOR = '#4C721D'    # UVU GREEN 
-# DEFAULT_SECONDARY_COLOR = '#FFFFFF'  # UVU WHITE
-
-# TODO: Testing purposes 
-DEFAULT_PRIMARY_COLOR = '#219ebc'
-DEFAULT_SECONDARY_COLOR = '#023047'
+DEFAULT_PRIMARY_COLOR = '#4C721D'    # UVU GREEN 
+DEFAULT_SECONDARY_COLOR = '#FFFFFF'  # UVU WHITE
 
 # labels
 ROOT_LABEL = "UVSim"
@@ -51,9 +47,7 @@ class GUIHandler:
         add_tab_button.pack(side='right')
         tab_management_buttons.pack(anchor='ne', side="top")
 
-        # uv_sim = uvsim.UVSim(gui=True) # will create whatever the default version parameter of uvsim is
-        # GUI(tab, uv_sim)
-        GUI(tab)
+        GUI(tab, self)
     
     def close_tab(self, tab):
         total_tabs = self.notebook.index('end')
@@ -78,40 +72,53 @@ class GUIHandler:
             style.configure('TFrame', background=color1)
         if is_valid_hex_code(color2):
             style.configure('TButton', background=color2)
+            style.configure('CustomButton1.TButton', background=color2)
         return style
 
 class GUI:
-    def __init__(self, tab, version = SIX_BIT_VERSION):
+    def __init__(self, tab, gui_handler, version = SIX_BIT_VERSION):
         self.uv_sim = uvsim.UVSim(version, True)
         self.root = tab #self.root is now referencing the tab parent in the ttk notebook from GUIHandler
-        # self.root.bind("<KeyPress>", self.shortcut)   # this key binding event is now handled in the key binding event for arrow keys
+        self.gui_handler = gui_handler
 
         # Left frame
-        self.left_frame = tk.Frame(self.root)
+        self.left_frame = ttk.Frame(self.root)
         self.left_frame.pack(side=tk.LEFT, fill=tk.BOTH, padx=10, pady=5, expand=False)
 
         # Accumulator frame
-        self.accumulator_frame = tk.Frame(self.left_frame)
+        self.accumulator_frame = ttk.Frame(self.left_frame, style='CustomButton1.TButton')
         self.accumulator_frame.pack(side=tk.TOP, fill=tk.X, pady=5, padx=(0, 16))
 
-        self.accumulator_label = tk.Label(self.accumulator_frame,  text=ACC_LABEL)
+        self.accumulator_label = ttk.Label(
+            self.accumulator_frame, 
+            text=ACC_LABEL, 
+            style='CustomButton1.TButton', 
+        )
         self.accumulator_label.pack(side=tk.LEFT, fill=tk.NONE) 
 
         self.accumulator_text = tk.Text(self.accumulator_frame, wrap="none", padx=5, height=1, width=8)
         self.accumulator_text.config(state="disabled")
         self.accumulator_text.pack(side=tk.RIGHT, fill=tk.X, expand=True)
 
+
         # Memory frame
-        self.memory_frame = tk.Frame(self.left_frame, pady=5)
+        self.memory_frame = ttk.Frame(self.left_frame, padding=5, style='CustomButton1.TButton')
         self.memory_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        self.memory_title_label = tk.Label(self.memory_frame, text=MEMORY_LABEL)
+        self.memory_title_label = ttk.Label(self.memory_frame, text=MEMORY_LABEL, style='CustomButton1.TButton')
         self.memory_title_label.pack()
 
-        self.memory_canvas = tk.Canvas(self.memory_frame, width=40)
+        self.memory_canvas = tk.Canvas(
+            self.memory_frame, 
+            width=40
+        )
         self.memory_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        self.memory_scrollbar = tk.Scrollbar(self.memory_frame, orient=tk.VERTICAL, command=self.memory_canvas.yview)
+        self.memory_scrollbar = tk.Scrollbar(
+            self.memory_frame, 
+            orient=tk.VERTICAL, 
+            command=self.memory_canvas.yview
+        )
         self.memory_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.memory_canvas.configure(yscrollcommand=self.memory_scrollbar.set)
@@ -143,10 +150,10 @@ class GUI:
         self.memory_canvas_menu.add_command(label="Cut", command=self.cut_text)
 
         # Output frame
-        self.output_frame = tk.Frame(self.root)
+        self.output_frame = ttk.Frame(self.root, style='CustomButton1.TButton')
         self.output_frame.pack(side=tk.RIGHT, fill=tk.BOTH, padx=10, pady=5, expand=True)
 
-        self.output_title_label = tk.Label(self.output_frame, text=OUTPUT_LABEL)
+        self.output_title_label = ttk.Label(self.output_frame, text=OUTPUT_LABEL, style='CustomButton1.TButton')
         self.output_title_label.pack()
 
         self.output_text = tk.Text(self.output_frame, wrap="char", height=10, width=40)
@@ -160,50 +167,59 @@ class GUI:
         self.output_text.config(yscrollcommand=self.output_scrollbar.set)
 
         # File buttons
-        self.file_buttons_frame = tk.Frame(self.root)
+        self.file_buttons_frame = ttk.Frame(self.root)
         self.file_buttons_frame.pack(fill=tk.X, pady=5)
 
-        self.load_button = tk.Button(self.file_buttons_frame, text="Load Program", command=self.load_program)
+        self.load_button = ttk.Button(self.file_buttons_frame, text="Load Program", command=self.load_program)
         self.load_button.pack(fill=tk.X)
 
-        self.save_button = tk.Button(self.file_buttons_frame, text="Save Program", command=self.save_program)
+        self.save_button = ttk.Button(self.file_buttons_frame, text="Save Program", command=self.save_program)
         self.save_button.pack(fill=tk.X)
 
         # Program execution buttons
         self.execute_buttons = tk.Frame(self.root)
         self.execute_buttons.pack(fill=tk.X, pady=(0,5))
 
-        self.run_button = tk.Button(self.execute_buttons, text="Run Program", command=self.run_program)
+        self.run_button = ttk.Button(self.execute_buttons, text="Run Program", command=self.run_program)
         self.run_button.pack(fill=tk.X)
 
-        self.step_button = tk.Button(self.execute_buttons, text="Step Program", command=self.step_program)
+        self.step_button = ttk.Button(self.execute_buttons, text="Step Program", command=self.step_program)
         self.step_button.pack(fill=tk.X)
 
-        self.stop_button = tk.Button(self.execute_buttons, text="Stop Program", command=self.stop_program)
+        self.stop_button = ttk.Button(self.execute_buttons, text="Stop Program", command=self.stop_program)
         self.stop_button.pack(fill=tk.X)
         
         # Reinitialize button
-        self.reinitialize_button = tk.Button(self.root, text="Reinitialize UVSim", command=self.initialize_uvsim)
+        self.reinitialize_button = ttk.Button(self.root, text="Reinitialize UVSim", command=self.initialize_uvsim)
         self.reinitialize_button.pack(fill=tk.X)
 
         # Change version button
-        self.version_button = tk.Button(self.root, text="Change Version", command=self.change_version)
+        self.version_button = ttk.Button(self.root, text="Change Version", command=self.change_version)
         self.version_button.pack(fill=tk.X)
         
         # Clear Output button
-        self.clear_output_button = tk.Button(self.root, text="Clear Output", command=self.clear_output)
+        self.clear_output_button = ttk.Button(self.root, text="Clear Output", command=self.clear_output)
         self.clear_output_button.pack(fill=tk.X)
 
         # Change colors button
-        self.change_colors_button = tk.Button(self.root, text="Change Color Scheme", command=self.open_color_popup)
+        self.change_colors_button = ttk.Button(
+            self.root, 
+            text="Change Color Scheme", 
+            command=self.open_color_popup
+            )
         self.change_colors_button.pack(fill=tk.X)
 
-        self.reset_colors_button = tk.Button(self.root, text="Reset to Default Colors",command=lambda: self.set_colors(DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR))
+        self.reset_colors_button = ttk.Button(
+            self.root, 
+            text="Reset to Default Colors",
+            command=lambda: GUIHandler.set_guihandler_colors(
+                self.gui_handler, 
+                DEFAULT_PRIMARY_COLOR, 
+                DEFAULT_SECONDARY_COLOR
+            )
+        )
         self.reset_colors_button.pack(fill=tk.X)
 
-        # SET COLORS TO THE DEFAULTS UPON STARTUP
-        #self.set_colors(DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR) #broken by ttk notebook
-    
     def get_inputs(self, entry1, entry2, popup):
             input1 = entry1.get()
             input2 = entry2.get()
@@ -216,8 +232,9 @@ class GUI:
                 print(f"Error: Secondary color input: '{input2}' was not a valid hex code. No secondary color change.")
             else: 
                 print(f"Secondary color was successfully changed to '{input2}'")
-            self.set_colors(input1, input2)
+            GUIHandler.set_guihandler_colors(self.gui_handler, input1, input2)
             popup.destroy()
+
 
     def open_color_popup(self):
         popup = tk.Toplevel(root)
@@ -258,67 +275,6 @@ class GUI:
         )
         cancel_button.pack(side="right", padx=5, pady=5)
 
-    def set_colors(self, color1, color2): 
-        # All frames are color1 or what they were before. 
-        frames = [
-            self.root,
-            self.left_frame,
-            self.inner_memory_frame,
-            self.file_buttons_frame,
-            self.execute_buttons, 
-        ]
-        # All buttons and text are color2 or what they were before. 
-        bt_list = [
-            self.accumulator_frame,
-            self.memory_frame,
-            self.output_frame,
-            self.accumulator_label,
-            self.accumulator_text, 
-            self.memory_title_label,
-            self.memory_line_text,
-            self.memory_text,
-            self.output_title_label,
-            self.output_text, 
-            self.load_button,
-            self.save_button,
-            self.run_button,
-            self.step_button,
-            self.stop_button,
-            self.reinitialize_button,
-            self.clear_output_button,
-            self.change_colors_button,
-            self.memory_canvas,
-            self.reset_colors_button,
-            self.execute_buttons
-        ]
-
-        #manually set the colors of the labels
-        labels = [self.accumulator_label,
-                  self.memory_title_label,
-                  self.output_title_label
-        ]
-
-        for label in labels:
-            label.config(fg='black')
- 
-        #manually set the colors for the text elements
-        text_elements = [self.accumulator_text,
-                         self.memory_line_text,
-                         self.memory_text,
-                         self.output_text
-        ]
-
-        for text in text_elements:
-            text.config(fg='black')
-
-        if is_valid_hex_code(color1):
-            for frame in frames:    
-                frame.config(bg=color1)
-
-        if is_valid_hex_code(color2):
-            for bt in bt_list:  
-                bt.config(bg=color2)
-    
 
     def change_version(self):
         version_popup = tk.Toplevel()
