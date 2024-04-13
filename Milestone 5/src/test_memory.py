@@ -44,9 +44,9 @@ def test_write_success(capfd):
     address = 10
     value = 1337
     memory.STORE(value, address)
-    memory.WRITE(10)
+    output = memory.WRITE(10)
     captured = capfd.readouterr()
-    assert captured.out == f"At memory address {address} is {value}\n"
+    assert output == f"At memory address {address} is {value}"
     assert captured.err == ""
 
 

@@ -1,6 +1,7 @@
 import pytest
 from uvsim import UVSim
-from memory import Memory
+from file_formatter import TxtFormatter
+from os import path
 
 
 # Test store_program_in_memory using Test1.txt
@@ -8,8 +9,10 @@ def test_store_program_in_memory_success():
     """
     Testing store_program_in_memory function
     """
-    uvsim = UVSim()
-    uvsim.store_program_in_memory("Test1.txt")
+    uvsim = UVSim(1)
+    basepath = path.dirname(__file__)
+    filepath = path.abspath(path.join(basepath, "..", "test", "Test1.txt"))
+    uvsim.store_program_in_memory(TxtFormatter.format_file(filepath), skip_identification=True)
     assert uvsim.memory.LOAD(0) == 1007
 
     # test store_program_in_memory failure
@@ -17,31 +20,25 @@ def test_store_program_in_memory_failure():
     """
     Testing store_program_in_memory function
     """
-    uvsim = UVSim()
+    uvsim = UVSim(1)
     with pytest.raises(FileNotFoundError):
-        uvsim.store_program_in_memory("Failure.txt")
+        uvsim.store_program_in_memory(TxtFormatter.format_file("Failure.txt"))
 
 #test run_program success
 def test_run_program_success():
     """
     Testing run_program function
     """
-    uvsim = UVSim()
-    uvsim.memory.STORE(4300, 0)
+    uvsim = UVSim(1)
+    uvsim.store_program_in_memory(["4300"], skip_identification=True)
     uvsim.run_program()
     assert uvsim.memory.LOAD(0) == 4300
-
-#test run_program failure (shows how uvsim is handling the EOFError)
-class MockMemory(Memory):
-    def LOAD(self, address):
-        raise EOFError
 
 def test_run_program_failure():
     """
     Testing run_program function failure scenario
     """
-    uvsim = UVSim()
-    uvsim.memory = MockMemory()
-
-    with pytest.raises(EOFError):
+    uvsim = UVSim(1)
+    uvsim.store_program_in_memory([""], skip_identification=True)
+    with pytest.raises(Exception):
         uvsim.run_program()

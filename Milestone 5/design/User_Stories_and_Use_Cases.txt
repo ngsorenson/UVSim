@@ -54,7 +54,6 @@ Steps:
 
 User Story 2: As an educator, I want to demonstrate machine language concepts using UVSim as a teaching tool.
 
-
 Use Case 6: Perform Multiplication with Overflow
 Actor: UVSim
 Description: UVSim performs multiplication with overflow.
@@ -73,36 +72,35 @@ Steps:
 
 Use Case 8: Edit BasicML Program
 Actor: UVSim
-Description: UVSim allows users to view amd edit BasicML programs.
+Description: UVSim allows users to view and edit BasicML programs.
 Steps:
 1. User loads a BasicML program into UVSim.
 2. User views and edits the program as needed.
-3. User can run new edited program if needed.
+3. User can run the new edited program if needed.
 
 Use Case 9: Save BasicML File to Directory
 Actor: UVSim
-Description: UVSim allows user to save to their chosen location. 
-Steps: 
-1.User loads a program into UVSim.
-2. User chooses whether actions to be applied to loaded program. 
+Description: UVSim allows users to save to their chosen location.
+Steps:
+1. User loads a program into UVSim.
+2. User chooses whether actions to be applied to the loaded program.
 3. UVSim will save any changes made to the program.
-4. User saves the new program to any location they choose. 
+4. User saves the new program to any location they choose.
 
 Use Case 10: Step Program
 Actor: UVSim
-Description: UVSim has an option to go through the instructions step by step. 
-Steps: 
-1.User loads a program into UVSim
-2. User presses step program
+Description: UVSim has an option to go through the instructions step by step.
+Steps:
+1. User loads a program into UVSim.
+2. User presses step program.
 3. UVSim will go through the next step in the program.
-4. User presses step program again. 
-5. UVSim repeats this process until finished
+4. User presses step program again.
+5. UVSim repeats this process until finished.
 
 Use Case 11: Stop Program
 Actor: UVSim
-Description: UVSIm has the option to be stopped at anytime. 
-1.User loads and steps through  a program in UVSim
-2. UVSim will continue stepping. 
-3. User stops the program
-4. UVSim will stop the program
-
+Description: UVSim has the option to be stopped at any time.
+1. User loads and steps through a program in UVSim.
+2. UVSim will continue stepping.
+3. User stops the program.
+4. UVSim will stop the program.

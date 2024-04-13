@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, filedialog, simpledialog
+from tkinter import ttk, filedialog
 import uvsim
 import re
 from file_formatter import TxtFormatter
@@ -47,7 +47,7 @@ class GUIHandler:
         add_tab_button.pack(side='right')
         tab_management_buttons.pack(anchor='ne', side="top")
 
-        GUI(tab, self)
+        GUI(tab, gui_handler=self)
     
     def close_tab(self, tab):
         total_tabs = self.notebook.index('end')
@@ -75,8 +75,17 @@ class GUIHandler:
             style.configure('CustomButton1.TButton', background=color2)
         return style
 
+    def window_wiggle(self):
+        '''increases then decreases the notebook height by 1px, workaround to refresh the elements after changing versions'''
+        # Increase height by 1 pixel
+        current_height = self.notebook.winfo_height()
+        self.notebook.configure(height=current_height + 1)
+        
+        # Decrease height by 1 pixel
+        self.notebook.configure(height=current_height)
+
 class GUI:
-    def __init__(self, tab, gui_handler, version = SIX_BIT_VERSION):
+    def __init__(self, tab, gui_handler = None, version = 2):
         self.uv_sim = uvsim.UVSim(version, True)
         self.root = tab #self.root is now referencing the tab parent in the ttk notebook from GUIHandler
         self.gui_handler = gui_handler
@@ -159,6 +168,7 @@ class GUI:
         self.output_text = tk.Text(self.output_frame, wrap="char", height=10, width=40)
         self.output_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.output_text.insert(tk.END, "> ")
+        self.output_text.see("end")
         self.output_text.configure(state="disabled")
 
         self.output_scrollbar = tk.Scrollbar(self.output_frame, command=self.output_text.yview)
@@ -313,6 +323,7 @@ class GUI:
         if version is not None:
             self.uv_sim.change_version(version)
             self.update_memory_text()
+            self.gui_handler.window_wiggle() 
             version_popup.destroy()
             
     def is_arrow_break(self, event):
@@ -418,6 +429,7 @@ class GUI:
         if self.uv_sim.is_running:
             self.output_text.configure(state="normal")
             self.output_text.insert(tk.END, "\n> ")
+            self.output_text.see("end")
             self.output_text.configure(state="disabled")
         self.uv_sim.store_program_in_memory(self.get_gui_memory_contents(), skip_identification=True)
         self.update_memory_text()
@@ -427,6 +439,7 @@ class GUI:
         if self.uv_sim.is_running:
             self.output_text.configure(state="normal")
             self.output_text.insert(tk.END, "\n> ")
+            self.output_text.see("end")
             self.output_text.configure(state="disabled")
         self.uv_sim = uvsim.UVSim(self.uv_sim.version, True)
         self.update_memory_text()
@@ -437,6 +450,7 @@ class GUI:
         if self.uv_sim.is_running:
             self.output_text.configure(state="normal")
             self.output_text.insert(tk.END, "\n> ")
+            self.output_text.see("end")
             self.output_text.configure(state="disabled")
         self.memory_title_label.config(text=MEMORY_LABEL)
         if file_name:
@@ -445,6 +459,7 @@ class GUI:
             self.update_memory_text()
             self.output_text.configure(state="normal")
             self.output_text.insert(tk.END, f"File loaded successfully from {file_name}.\n> ")
+            self.output_text.see("end")
             self.output_text.configure(state="disabled")
     
     def save_program(self):
@@ -466,6 +481,7 @@ class GUI:
         file.close()
         self.output_text.configure(state="normal")
         self.output_text.insert(tk.END, f"File saved successfully to {file.name}.\n> ")
+        self.output_text.see("end")
         self.output_text.configure(state="disabled")
 
     def step_program(self):
@@ -473,17 +489,19 @@ class GUI:
         try:
             if not self.uv_sim.is_running:
                 self.output_text.insert(tk.END, "Running program:")
+                self.output_text.see("end")
                 self.save_gui_memory_text()
             self.uv_sim.step_program()
             if self.uv_sim.output is not None:
                 self.output_text.insert(tk.END, f"\n{self.uv_sim.output}")
+                self.output_text.see("end")
                 self.uv_sim.output = None
             if not self.uv_sim.is_running:
                 self.output_text.insert(tk.END, "\n> ")
-        # except EOFError:
-        #     self.output_text.insert(tk.END, "\nEnd of program.\n> ")
+                self.output_text.see("end")
         except Exception as e:
             self.output_text.insert(tk.END, f"\nError: {str(e)}\n> ")
+            self.output_text.see("end")
         self.update_memory_text()
         self.output_text.configure(state="disabled")
 
@@ -496,6 +514,7 @@ class GUI:
         self.uv_sim.is_running = False
         self.output_text.configure(state="normal")
         self.output_text.insert(tk.END, "\n> ")
+        self.output_text.see("end")
         self.output_text.configure(state="disabled")
         self.update_memory_text()
 
