@@ -85,7 +85,7 @@ class GUIHandler:
         self.notebook.configure(height=current_height)
 
 class GUI:
-    def __init__(self, tab, gui_handler = None, version = 2):
+    def __init__(self, tab, gui_handler = None, version = SIX_BIT_VERSION):
         self.uv_sim = uvsim.UVSim(version, True)
         self.root = tab #self.root is now referencing the tab parent in the ttk notebook from GUIHandler
         self.gui_handler = gui_handler
@@ -315,10 +315,10 @@ class GUI:
         '''need this separate function to capture what is selected on click event'''
         match selected_version:
             case "v1 - 4 bit":
-                version = 1
+                version = FOUR_BIT_VERSION
                 
             case "v2 - 6 bit":
-                version = 2
+                version = SIX_BIT_VERSION
 
         if version is not None:
             self.uv_sim.change_version(version)
