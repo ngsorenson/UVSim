@@ -104,3 +104,40 @@ Description: UVSim has the option to be stopped at any time.
 2. UVSim will continue stepping.
 3. User stops the program.
 4. UVSim will stop the program.
+
+Use Case 12: Reinitialize UVSim
+Actor: UVSim
+Description: UVSim allows resetting the program state without closing the application.
+Steps:
+1. User clicks on the "Reinitialize UVSim" button.
+2. UVSim clears the memory and resets the program state.
+3. User can continue using UVSim without closing the application.
+
+Use Case 13: Clear Output
+Actor: UVSim
+Description: UVSim allows clearing the output in the output field.
+Steps:
+1. User clicks on the "Clear Output" button.
+2. UVSim clears the output in the output field.
+
+Use Case 14: Change Color Scheme
+Actor: UVSim
+Description: UVSim allows the user to customize the color scheme using hex codes for primary and secondary colors.
+Steps:
+1. User clicks on the "Change Color Scheme" button.
+2. UVSim prompts the user to input hex codes for primary and secondary colors.
+3. UVSim updates the color scheme accordingly.
+
+Use Case 15: Reset to Default Colors
+Actor: UVSim
+Description: UVSim allows resetting the color scheme back to UVU colors.
+Steps:
+1. User clicks on the "Reset to Default Colors" button.
+2. UVSim resets the color scheme back to UVU colors.
+
+Use Case 16: Change Version
+Actor: UVSim
+Description: UVSim allows switching between versions of 6-bit files and 4-bit files.
+Steps:
+1. User clicks on the "Change Version" button.
+2. UVSim switches between versions of 6-bit files and 4-bit files.
